@@ -1,0 +1,10 @@
+name: MdI-Server
+main: com.github.jannled.mdiServer.MdIServer
+version: 0.0.1
+
+commands: 
+    join:
+        description: Join a Lobby
+        usage: /join [Lobby] <Player>
+        permission: mdiServer.join
+        permission-message: You are not allowed to forcefully join a lobby!
