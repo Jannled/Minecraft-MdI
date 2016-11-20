@@ -4,7 +4,7 @@ public interface Countdown
 {
 	/**
 	 * Called whenever the counter ticks
-	 * @param time The value to start counting down, for e.g. 10
+	 * @param time The current time
 	 */
 	public void tickCounter(int time);
 	

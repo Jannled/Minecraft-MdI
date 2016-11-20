@@ -1,47 +1,61 @@
 package com.github.jannled.mdiServer.countdown;
 
-import org.bukkit.Bukkit;
-
-public class Timer implements Runnable
+public class Timer
 {
-	private Countdown countdown;
-	private int taskID;
+	Countdown countdown;
 	private int time;
+	private int start;
+	private boolean remove = false;
 
-	public Timer(Countdown countdown, int startTime)
+	/**
+	 * 
+	 * @param countdown The class that should recieve the countdown
+	 * @param start The value to start ticking down, for e.g. 10
+	 */
+	public Timer(Countdown countdown, int start)
 	{
 		this.countdown = countdown;
-		this.time = startTime;
+		this.start = start;
+		this.time = start;
 	}
-
-	public int tickOnce()
+	
+	public int tick()
 	{
-		time--;
-		return time+1;
-	}
-
-	@Override
-	public void run()
-	{
-		System.out.println("Timer: " + time);
-		countdown.tickCounter(tickOnce());
-		if(time < 1)
+		if(time>0)
 		{
+			time--;
+			countdown.tickCounter(time);
+			return time;
+		}
+		else
+		{
+			remove = true;
 			countdown.end();
-			if(countdown!=null)
-			{
-				countdown.end();
-				Bukkit.getServer().getScheduler().cancelTask(taskID);
-			}
+			time = 0;
+			return time;
 		}
 	}
 	
-	/**
-	 * Needs to be set in order to make the event cancelable
-	 * @param taskID
-	 */
-	public void setTaskID(int taskID)
+	public int getStartTime()
 	{
-		this.taskID = taskID;
+		return start;
+	}
+	
+	/**
+	 * 
+	 * @return The current time
+	 */
+	public int getTickTime()
+	{
+		return time;
+	}
+	
+	/**
+	 * Check if the countdown reached zero.
+	 * @return True if the countdown reached zero, false if not
+	 */
+	public boolean hasEnded()
+	{
+		return remove;
 	}
 }

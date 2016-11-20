@@ -1,5 +1,7 @@
 package com.github.jannled.mdiServer.countdown;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -8,13 +10,16 @@ import org.bukkit.plugin.Plugin;
  * @author Jannled
  * @version 0.0.1
  */
-public class CountdownTick
+public class CountdownTick implements Runnable
 {
 	Plugin plugin;
+	ArrayList<Timer> timer = new ArrayList<Timer>();
+	int schedularID;
 	
 	public CountdownTick(Plugin plugin)
 	{
 		this.plugin = plugin;
+		schedularID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 20, 20);
 	}
 	
 	/**
@@ -25,7 +30,17 @@ public class CountdownTick
 	public void startCoundown(Countdown countdown, int start)
 	{
 		Timer timer = new Timer(countdown, start);
-		int taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, timer, 20, 20);
-		timer.setTaskID(taskID);
+		this.timer.add(timer);
+	}
+
+	@Override
+	public void run()
+	{
+		for(Timer t : timer)
+		{
+			t.tick();
+			if(t.hasEnded())
+				timer.remove(t);
+		}
 	}
 }

@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_91"/>
-	<classpathentry kind="lib" path="D:/Users/Jannik/Documents/JavaProgramme/libraries/Minecraft/spigot-1.10.2-R0.1-SNAPSHOT-latest.jar" sourcepath="D:/Users/Jannik/Documents/JavaProgramme/libraries/Minecraft/craftbukkit-master@a951a88398d/src/main/java">
+	<classpathentry kind="lib" path="D:/Users/Jannik/Documents/JavaProgramme/libraries/Minecraft/spigot-1.10.2-R0.1-SNAPSHOT-latest.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="https://hub.spigotmc.org/javadocs/spigot/"/>
 		</attributes>

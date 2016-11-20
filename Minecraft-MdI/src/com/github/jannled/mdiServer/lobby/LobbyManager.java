@@ -8,14 +8,12 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
+import com.github.jannled.mdiServer.gamemodes.CaptureTheFlag;
 
-public class LobbyManager implements Listener
+public class LobbyManager
 {
 	MdIServer main;
 	
@@ -26,13 +24,7 @@ public class LobbyManager implements Listener
 	{
 		this.main = main;
 		lobbys.add(new Lobby("Spawn", new Location(Bukkit.getServer().getWorlds().get(0), 0, 100, 0)));
-	}
-	
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e)
-	{
-		main.getLogger().info("Player " + e.getPlayer().getDisplayName() + " connected");
-		lobbys.get(defaultLobby).joinLobby(e.getPlayer());
+		lobbys.add(new LobbyGame("CTF", new Location(Bukkit.getWorlds().get(0), 33, 64, 33), new CaptureTheFlag(new Team[] {new Team("Red"), new Team("Blue")})));
 	}
 	
 	public boolean cmdJoin(CommandSender sender, Command command, String name, String[] args)
@@ -47,7 +39,7 @@ public class LobbyManager implements Listener
 					sender.sendMessage(ChatColor.DARK_RED + "Could not find lobby " + ChatColor.GOLD + args[0] + ChatColor.DARK_RED + "!");
 					return true;
 				}
-				lobby.joinLobby((Player) sender);
+				joinLobby((Player) sender, lobby);
 				return true;
 			}
 		}
@@ -67,11 +59,17 @@ public class LobbyManager implements Listener
 					sender.sendMessage(ChatColor.DARK_RED + "Could not find player " + ChatColor.GOLD + args[1] + ChatColor.DARK_RED + "!");
 					return true;
 				}
-				lobby.joinLobby(player);
+				joinLobby(player, lobby);
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public void joinLobby(Player player, Lobby lobby)
+	{
+		lobby.joinLobby(player);
+		main.getPlayerManager().setLobby(player, lobby);
 	}
 	
 	public Lobby getLobby(String name)
@@ -92,5 +90,15 @@ public class LobbyManager implements Listener
 	public void removeLobby(Lobby lobby)
 	{
 		lobbys.remove(lobby);
+	}
+	
+	public ArrayList<Lobby> getLobbys()
+	{
+		return lobbys;
+	}
+	
+	public int getDefaultLobby()
+	{
+		return defaultLobby;
 	}
 }

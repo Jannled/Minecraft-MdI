@@ -8,6 +8,7 @@ public class Team
 {
 	private String name;
 	private ArrayList<Player> players = new ArrayList<Player>();
+	private int teamScore;
 	
 	public Team(String name)
 	{
@@ -27,6 +28,16 @@ public class Team
 	public String getName()
 	{
 		return name;
+	}
+	
+	public int getTeamPoints()
+	{
+		return teamScore;
+	}
+	
+	public void addTeamPoints(int points)
+	{
+		teamScore += points;
 	}
 	
 	public ArrayList<Player> getPlayers()

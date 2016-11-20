@@ -6,24 +6,28 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.jannled.mdiServer.countdown.CountdownTick;
 import com.github.jannled.mdiServer.lobby.*;
+import com.github.jannled.mdiServer.player.PlayerManager;
 
 public class MdIServer extends JavaPlugin
 {
 	public static CountdownTick countdown;
 	
 	private final String pluginName = "MdI-Server";
+	private PlayerManager playerManager;
 	private LobbyManager lobbyManager;
 	
 	public MdIServer()
 	{
-		MdIServer.countdown = new CountdownTick(this);
-		this.lobbyManager = new LobbyManager(this);
+		
 	}
 	
 	@Override 
 	public void onEnable()
 	{
-		getServer().getPluginManager().registerEvents(lobbyManager, this);
+		MdIServer.countdown = new CountdownTick(this);
+		this.lobbyManager = new LobbyManager(this);
+		this.playerManager = new PlayerManager(this);
+		getServer().getPluginManager().registerEvents(playerManager, this);
 		getLogger().info(pluginName + " lock'n'load!");
 	}
 	
@@ -41,5 +45,15 @@ public class MdIServer extends JavaPlugin
 			return lobbyManager.cmdJoin(sender, command, name, args);
 		}
 		return false;
+	}
+	
+	public LobbyManager getLobbyManager()
+	{
+		return lobbyManager;
+	}
+	
+	public PlayerManager getPlayerManager()
+	{
+		return playerManager;
 	}
 }

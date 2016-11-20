@@ -4,18 +4,22 @@ import java.util.ArrayList;
 
 import org.bukkit.Location;
 
-public class LobbyPvP extends Lobby
+import com.github.jannled.mdiServer.gamemodes.Gamemode;
+
+public class LobbyGame extends Lobby
 {
 	private ArrayList<Team> teams = new ArrayList<Team>();
+	Gamemode gamemode;
 	
 	/**
 	 * Creates a new Lobby with two Teams: Red and Bue
 	 * @param name The Name of the Lobby, will be displayed if a player is moved to that lobby
 	 * @param spawnLocation The Location where the player will be teleported to, when he enters the lobby 
 	 */
-	public LobbyPvP(String name, Location spawnLocation)
+	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode)
 	{
 		super(name, spawnLocation);
+		this.gamemode = gamemode;
 		teams.add(new Team("Red"));
 		teams.add(new Team("Blue"));
 	}
@@ -26,10 +30,11 @@ public class LobbyPvP extends Lobby
 	 * @param spawnLocation The Location where the player will be teleported to, when he enters the lobby 
 	 * @param team The teams you want to create
 	 */
-	public LobbyPvP(String name, Location spawnLocation, Team... team)
+	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode, Team... team)
 	{
 		super(name, spawnLocation);
-		for(Team t : teams)
+		this.gamemode = gamemode;
+		for(Team t : team)
 		{
 			teams.add(t);
 		}
