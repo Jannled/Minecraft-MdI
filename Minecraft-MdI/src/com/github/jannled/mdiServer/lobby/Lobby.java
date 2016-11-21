@@ -22,7 +22,10 @@ public class Lobby
 
 	public void joinLobby(Player player)
 	{
-		players.add(player);
+		if(!players.contains(player))
+		{
+			players.add(player);
+		}
 		player.teleport(spawn);
 		player.sendMessage(P.pluginName + "You were moved to " + name);
 	}

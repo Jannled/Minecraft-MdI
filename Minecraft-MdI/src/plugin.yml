@@ -1,6 +1,9 @@
 name: MdI-Server
 main: com.github.jannled.mdiServer.MdIServer
+load: POSTWORLD
 version: 0.0.1
+author: Jannled
+description: One server for many gamemodes
 
 commands: 
     join:

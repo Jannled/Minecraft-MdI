@@ -36,11 +36,13 @@ public class CountdownTick implements Runnable
 	@Override
 	public void run()
 	{
+		ArrayList<Timer> remove = new ArrayList<Timer>();
 		for(Timer t : timer)
 		{
 			t.tick();
 			if(t.hasEnded())
-				timer.remove(t);
+				remove.add(t);
 		}
+		timer.removeAll(remove);
 	}
 }

@@ -68,15 +68,42 @@ public class LobbyManager
 	
 	public void joinLobby(Player player, Lobby lobby)
 	{
+		for(Lobby l : lobbys)
+		{
+			l.leaveLobby(player);
+		}
 		lobby.joinLobby(player);
-		main.getPlayerManager().setLobby(player, lobby);
+	}
+	
+	/**
+	 * THis method checks if the player is still in any Lobby and teleports him there, if it still exists or brings him to spawn
+	 * @param player The player to reconnect to its lobby
+	 * @return The Lobby where the player is reconnected to. If the player is in no lobby, the default spawn lobby is returned
+	 */
+	public Lobby reconnectLobby(Player player)
+	{
+		for(Lobby l : lobbys)
+		{
+			for(int i=0; i<l.getPlayers().size(); i++)
+			{
+				if(l.getPlayers().get(i).getUniqueId().equals(player.getUniqueId()))
+				{
+					player.teleport(l.getSpawnLocation());
+					player.sendMessage(P.pluginName + "You were reconnected to " + l.getName());
+					l.getPlayers().set(i, player);
+					return l;
+				}
+			}
+		}
+		lobbys.get(defaultLobby).joinLobby(player);
+		return lobbys.get(defaultLobby);
 	}
 	
 	public Lobby getLobby(String name)
 	{
 		for(Lobby lobby : lobbys)
 		{
-			if(lobby.getName().equals(name))
+			if(lobby.getName().equalsIgnoreCase(name))
 				return lobby;
 		}
 		return null;

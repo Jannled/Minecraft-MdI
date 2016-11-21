@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.jannled.mdiServer.countdown.CountdownTick;
-import com.github.jannled.mdiServer.lobby.*;
+import com.github.jannled.mdiServer.lobby.LobbyManager;
 import com.github.jannled.mdiServer.player.PlayerManager;
 
 public class MdIServer extends JavaPlugin

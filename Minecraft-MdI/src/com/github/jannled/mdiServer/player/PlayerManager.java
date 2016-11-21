@@ -26,9 +26,12 @@ public class PlayerManager implements Listener
 		ServerPlayer player = players.get(e.getPlayer());
 		if(player == null)
 		{
-			main.getLobbyManager().getLobbys().get(main.getLobbyManager().getDefaultLobby()).joinLobby(e.getPlayer());
+			players.put(e.getPlayer(), new ServerPlayer(e.getPlayer(), main.getLobbyManager().reconnectLobby(e.getPlayer())));
 		}
-		main.getLogger().info("Player " + e.getPlayer().getDisplayName() + " connected");
+		else
+		{
+			main.getLobbyManager().reconnectLobby(e.getPlayer());
+		}
 	}
 	
 	public void setLobby(Player player, Lobby lobby)
