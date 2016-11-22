@@ -11,3 +11,11 @@ commands:
         usage: /join [Lobby] <Player>
         permission: mdiServer.join
         permission-message: You are not allowed to forcefully join a lobby!
+        
+    lobby:
+        aliases: [spawn,leave,hub]
+        descripton: Return to lobby
+        usage: /lobby
+        default: true
+        permission: mdiServer.join
+        permission-message: You are not allowed to join the lobby! Lel I have no clue why...

@@ -40,9 +40,13 @@ public class MdIServer extends JavaPlugin
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String name, String[] args)
 	{
-		if(name.equalsIgnoreCase("join"))
+		if(command.getLabel().equalsIgnoreCase("join"))
 		{
 			return lobbyManager.cmdJoin(sender, command, name, args);
+		}
+		else if(command.getLabel().equalsIgnoreCase("lobby"))
+		{
+			return lobbyManager.cmdLobby(sender, command, name, args);
 		}
 		return false;
 	}

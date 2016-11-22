@@ -66,6 +66,17 @@ public class LobbyManager
 		return false;
 	}
 	
+	public boolean cmdLobby(CommandSender sender, Command command, String name, String[] args)
+	{
+		if(sender instanceof Player)
+		{
+			joinLobby((Player) sender, lobbys.get(defaultLobby));
+			return true;
+		}
+		sender.sendMessage(ChatColor.DARK_RED + "Only players can use " + ChatColor.RED + "/" + name + ChatColor.DARK_RED + "!");
+		return true;
+	}
+	
 	public void joinLobby(Player player, Lobby lobby)
 	{
 		for(Lobby l : lobbys)

@@ -27,12 +27,13 @@ public abstract class Gamemode implements Countdown
 	private ArrayList<org.bukkit.scoreboard.Team> scoreboardTeams = new ArrayList<org.bukkit.scoreboard.Team>();
 	
 	private Team[] teams;
-	private Player[] players;
+	
+	/** Represents the state the game is currently in */
 	int state;
 	
 	/**
-	 * Create a new gamemode
-	 * @param teams 
+	 * Create a new gamemode.
+	 * @param teams The teams 
 	 */
 	public Gamemode(Team[] teams)
 	{
@@ -40,15 +41,11 @@ public abstract class Gamemode implements Countdown
 		start();
 	}
 	
-	public Gamemode(Player[] players)
+	/**
+	 * Create a new gamemode.
+	 */
+	public Gamemode()
 	{
-		this.players = players;
-		teams = new Team[players.length];
-		for(int i=0; i<players.length; i++)
-		{
-			teams[i] = new Team(players[i].getName());
-			teams[i].addPlayer(players[i]);
-		}
 		start();
 	}
 	
@@ -93,9 +90,12 @@ public abstract class Gamemode implements Countdown
 		countdownTicks(time);
 		if(state == BEFORE_GAME)
 		{
-			for(Player p : players)
+			for(Team t : teams)
 			{
-				countdownForPlayers(p, time);
+				for(Player p : t.getPlayers())
+				{
+					countdownForPlayers(p, time);
+				}
 			}
 		}
 	}
@@ -120,7 +120,7 @@ public abstract class Gamemode implements Countdown
 		
 	}
 	
-	public void updateScoreboard()
+	public void updateScoreboard(int time)
 	{
 		
 	}
