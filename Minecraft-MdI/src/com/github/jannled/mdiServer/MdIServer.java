@@ -1,7 +1,9 @@
 package com.github.jannled.mdiServer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.jannled.mdiServer.countdown.CountdownTick;
@@ -12,7 +14,7 @@ public class MdIServer extends JavaPlugin
 {
 	public static CountdownTick countdown;
 	
-	private final String pluginName = "MdI-Server";
+	private final static String pluginName = "MdI-Server";
 	private PlayerManager playerManager;
 	private LobbyManager lobbyManager;
 	
@@ -60,4 +62,15 @@ public class MdIServer extends JavaPlugin
 	{
 		return playerManager;
 	}
+	
+    public static MdIServer getInstance() 
+    {
+        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin(pluginName);
+        if (plugin == null || !(plugin instanceof MdIServer))
+        {
+            throw new RuntimeException(pluginName + " not found. Is " + pluginName + " disabled?");
+        }
+ 
+        return ((MdIServer) plugin);
+    }
 }

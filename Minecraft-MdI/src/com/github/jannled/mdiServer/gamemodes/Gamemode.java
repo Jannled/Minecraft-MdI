@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
@@ -25,32 +28,45 @@ public abstract class Gamemode implements Countdown
 	private ScoreboardManager manager = Bukkit.getScoreboardManager();
 	private Scoreboard scoreboard = manager.getNewScoreboard();
 	private ArrayList<org.bukkit.scoreboard.Team> scoreboardTeams = new ArrayList<org.bukkit.scoreboard.Team>();
-	
+
+	private int maxRoundLength;
 	private Team[] teams;
 	
 	/** Represents the state the game is currently in */
-	int state;
+	private int state;
+	
+	/** Round stats */
+	private Objective roundStats;
 	
 	/**
 	 * Create a new gamemode.
 	 * @param teams The teams 
 	 */
-	public Gamemode(Team[] teams)
+	public Gamemode(Team[] teams, int maxRoundLength)
 	{
 		this.teams = teams;
+		this.maxRoundLength = maxRoundLength;
 		start();
 	}
 	
 	/**
 	 * Create a new gamemode.
 	 */
-	public Gamemode()
+	public Gamemode(int maxRoundLength)
 	{
+		this.maxRoundLength = maxRoundLength;
 		start();
 	}
 	
+	/**
+	 * First method called when the gamemode is constructed
+	 */
 	private void start()
 	{
+		//Initialize scoreboard for all players
+		roundStats = scoreboard.registerNewObjective("Test", "dummy");
+		roundStats.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
 		//Add every team to the scoreboard
 		for(Team t : teams)
 		{
@@ -58,11 +74,14 @@ public abstract class Gamemode implements Countdown
 			team.setAllowFriendlyFire(false);
 			team.setPrefix("[" + t.getName() + "]");
 			scoreboardTeams.add(team);
+			
+			Score score = roundStats.getScore(t.getName());
+			score.setScore(0);
 		}
 		
 		state = BEFORE_GAME;
 		before();
-		MdIServer.countdown.startCoundown(this, 10);
+		MdIServer.countdown.startCountdown(this, 10);
 	}
 	
 	@Override
@@ -75,6 +94,21 @@ public abstract class Gamemode implements Countdown
 		{
 			state = IN_GAME;
 			round();
+			MdIServer.countdown.startCountdown(this, maxRoundLength);
+		}
+		else if(state == IN_GAME)
+		{
+			stopRound();
+		}
+	}
+	
+	/**
+	 * Call this method if the round should end before the game counter reaches zero
+	 */
+	public void stopRound()
+	{
+		if(state == IN_GAME)
+		{
 			state = AFTER_GAME;
 			after();
 			cleanUp();
@@ -97,6 +131,10 @@ public abstract class Gamemode implements Countdown
 					countdownForPlayers(p, time);
 				}
 			}
+		}
+		else if(state == IN_GAME)
+		{
+			updateScoreboard(time);
 		}
 	}
 	
@@ -122,12 +160,25 @@ public abstract class Gamemode implements Countdown
 	
 	public void updateScoreboard(int time)
 	{
-		
+		scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName("Time remaining: " + time);
+		for(Team t : teams)
+		{
+			Score score = roundStats.getScore(t.getName());
+			score.setScore(t.getTeamPoints());
+			for(Player p : t.getPlayers())
+			{
+				p.setScoreboard(scoreboard);
+			}
+		}
 	}
 	
+	/**
+	 * Method gets called after the game will be destroyed (after <code>after()</code> has returned). 
+	 * Put stuff like stopping schedulars or similar inside
+	 */
 	public void cleanUp()
 	{
-		
+		roundStats.setDisplaySlot(null);
 	}
 	
 	/**
@@ -141,7 +192,7 @@ public abstract class Gamemode implements Countdown
 	public abstract void round();
 	
 	/**
-	 * Method gets called after <code>round()</code> returns. When this method returns, the game will clean up all traces left behind 
+	 * Method gets called after the countdown started at <code>maxRoundLength</code> reaches zero or if <code>stopRound()</code> is called
 	 */
 	public abstract void after();
 }

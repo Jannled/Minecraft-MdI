@@ -8,7 +8,7 @@ public class Timer
 	private boolean remove = false;
 
 	/**
-	 * 
+	 * Starts a countdown, starting at the <code>start</code> value counting down to zero
 	 * @param countdown The class that should recieve the countdown
 	 * @param start The value to start ticking down, for e.g. 10
 	 */
@@ -48,6 +48,11 @@ public class Timer
 	public int getTickTime()
 	{
 		return time;
+	}
+	
+	public void stop()
+	{
+		remove = true;
 	}
 	
 	/**

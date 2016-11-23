@@ -4,9 +4,9 @@ import com.github.jannled.mdiServer.lobby.Team;
 
 public class CaptureTheFlag extends Gamemode
 {
-	public CaptureTheFlag(Team[] teams)
+	public CaptureTheFlag(Team[] teams, int maxTime)
 	{
-		super(teams);
+		super(teams, maxTime);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class LobbyManager
 	{
 		this.main = main;
 		lobbys.add(new Lobby("Spawn", new Location(Bukkit.getServer().getWorlds().get(0), 0, 100, 0)));
-		lobbys.add(new LobbyGame("CTF", new Location(Bukkit.getWorlds().get(0), 33, 64, 33), new CaptureTheFlag(new Team[] {new Team("Red"), new Team("Blue")})));
+		lobbys.add(new LobbyGame("CTF", new Location(Bukkit.getWorlds().get(0), 33, 64, 33), new CaptureTheFlag(new Team[] {new Team("Red"), new Team("Blue")}, 360)));
 	}
 	
 	public boolean cmdJoin(CommandSender sender, Command command, String name, String[] args)

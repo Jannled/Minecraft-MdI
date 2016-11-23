@@ -26,11 +26,13 @@ public class CountdownTick implements Runnable
 	 * Starts the Countdown for the specified class
 	 * @param countdown The Class you want to run the countdown method in
 	 * @param start The value to start counting down, for e.g. 10
+	 * @return Timer
 	 */
-	public void startCoundown(Countdown countdown, int start)
+	public Timer startCountdown(Countdown countdown, int start)
 	{
 		Timer timer = new Timer(countdown, start);
 		this.timer.add(timer);
+		return timer;
 	}
 
 	@Override
