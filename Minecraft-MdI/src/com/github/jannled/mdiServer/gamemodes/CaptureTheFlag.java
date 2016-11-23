@@ -1,12 +1,10 @@
 package com.github.jannled.mdiServer.gamemodes;
 
-import com.github.jannled.mdiServer.lobby.Team;
-
 public class CaptureTheFlag extends Gamemode
 {
-	public CaptureTheFlag(Team[] teams, int maxTime)
+	public CaptureTheFlag(int maxTime)
 	{
-		super(teams, maxTime);
+		super(maxTime);
 	}
 
 	@Override

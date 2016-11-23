@@ -50,6 +50,10 @@ public class MdIServer extends JavaPlugin
 		{
 			return lobbyManager.cmdLobby(sender, command, name, args);
 		}
+		else if(command.getLabel().equalsIgnoreCase("startgame"))
+		{
+			return lobbyManager.cmdStartGame(sender, command, name, args);
+		}
 		return false;
 	}
 	

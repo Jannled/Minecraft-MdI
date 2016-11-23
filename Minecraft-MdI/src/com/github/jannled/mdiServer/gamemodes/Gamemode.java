@@ -3,6 +3,7 @@ package com.github.jannled.mdiServer.gamemodes;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -12,6 +13,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.countdown.Countdown;
+import com.github.jannled.mdiServer.lobby.LobbyGame;
 import com.github.jannled.mdiServer.lobby.Team;
 
 /**
@@ -29,46 +31,37 @@ public abstract class Gamemode implements Countdown
 	private Scoreboard scoreboard = manager.getNewScoreboard();
 	private ArrayList<org.bukkit.scoreboard.Team> scoreboardTeams = new ArrayList<org.bukkit.scoreboard.Team>();
 
+	private LobbyGame lobby;
+	
 	private int maxRoundLength;
-	private Team[] teams;
 	
 	/** Represents the state the game is currently in */
-	private int state;
+	private int state = -1;
 	
-	/** Round stats */
+	/** The Scores on the right side */
 	private Objective roundStats;
 	
 	/**
 	 * Create a new gamemode.
-	 * @param teams The teams 
-	 */
-	public Gamemode(Team[] teams, int maxRoundLength)
-	{
-		this.teams = teams;
-		this.maxRoundLength = maxRoundLength;
-		start();
-	}
-	
-	/**
-	 * Create a new gamemode.
+	 * @param lobby The Lobby for the gamemode, where the Gamemode gets the players from
+	 * @param maxRoundLength The length in seconds after the round ends. It can be stopped by calling <code>stopRound()</code> before the countdown has reached zero
 	 */
 	public Gamemode(int maxRoundLength)
 	{
 		this.maxRoundLength = maxRoundLength;
-		start();
 	}
 	
 	/**
-	 * First method called when the gamemode is constructed
+	 * Method to be called when the game should start
 	 */
-	private void start()
+	public void start()
 	{
 		//Initialize scoreboard for all players
 		roundStats = scoreboard.registerNewObjective("Test", "dummy");
 		roundStats.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 		//Add every team to the scoreboard
-		for(Team t : teams)
+		for(Team t : lobby.getTeams())
 		{
 			org.bukkit.scoreboard.Team team = scoreboard.registerNewTeam(t.getName());
 			team.setAllowFriendlyFire(false);
@@ -124,7 +117,7 @@ public abstract class Gamemode implements Countdown
 		countdownTicks(time);
 		if(state == BEFORE_GAME)
 		{
-			for(Team t : teams)
+			for(Team t : lobby.getTeams())
 			{
 				for(Player p : t.getPlayers())
 				{
@@ -146,7 +139,7 @@ public abstract class Gamemode implements Countdown
 	 */
 	public void countdownForPlayers(Player p, int time)
 	{
-		p.sendMessage(this.getClass().getCanonicalName() + " Die Runde beginnt in " + time + " Sekunden!");
+		p.sendMessage(this.getClass().getCanonicalName() + ChatColor.GOLD + " Die Runde beginnt in " + ChatColor.DARK_AQUA + time + ChatColor.GOLD + " Sekunden!");
 	}
 	
 	/**
@@ -161,7 +154,7 @@ public abstract class Gamemode implements Countdown
 	public void updateScoreboard(int time)
 	{
 		scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName("Time remaining: " + time);
-		for(Team t : teams)
+		for(Team t : lobby.getTeams())
 		{
 			Score score = roundStats.getScore(t.getName());
 			score.setScore(t.getTeamPoints());
@@ -179,6 +172,24 @@ public abstract class Gamemode implements Countdown
 	public void cleanUp()
 	{
 		roundStats.setDisplaySlot(null);
+	}
+
+	/**
+	 * Gets the current status of the game, if it is not yet started, counting down for start, ingame, or in the ending.
+	 * @return See the static fields for possible values
+	 */
+	public int getGameState()
+	{
+		return state;
+	}
+	
+	/**
+	 * The lobby that starts the gamemode, and keeps track of the players and teams
+	 * @param lobby The host lobby
+	 */
+	public void setLobby(LobbyGame lobby)
+	{
+		this.lobby = lobby;
 	}
 	
 	/**

@@ -24,7 +24,7 @@ public class LobbyManager
 	{
 		this.main = main;
 		lobbys.add(new Lobby("Spawn", new Location(Bukkit.getServer().getWorlds().get(0), 0, 100, 0)));
-		lobbys.add(new LobbyGame("CTF", new Location(Bukkit.getWorlds().get(0), 33, 64, 33), new CaptureTheFlag(new Team[] {new Team("Red"), new Team("Blue")}, 360)));
+		lobbys.add(new LobbyGame("CTF", new Location(Bukkit.getWorlds().get(0), 33, 64, 33), new CaptureTheFlag(360)));
 	}
 	
 	public boolean cmdJoin(CommandSender sender, Command command, String name, String[] args)
@@ -77,6 +77,46 @@ public class LobbyManager
 		return true;
 	}
 	
+	public boolean cmdStartGame(CommandSender sender, Command command, String name, String[] args)
+	{
+		sender.sendMessage("You try to forcefully start the game!");
+		if(args.length==0 && sender instanceof Player)
+		{
+			Player p = (Player) sender;
+			Lobby lobby = getLobby(p);
+			if(lobby==null)
+			{
+				sender.sendMessage(ChatColor.RED + "Exception: No Lobby found for that player!");
+				return false;
+			}
+			if(lobby instanceof LobbyGame)
+			{
+				LobbyGame l = (LobbyGame) lobby;
+				l.start();
+				return true;
+			}
+			sender.sendMessage(ChatColor.DARK_RED + "This lobby doesn't have a gamemode!");
+			
+		}
+		else if(args.length == 1)
+		{
+			Lobby lobby = getLobby(args[0]);
+			if(lobby==null)
+			{
+				sender.sendMessage(ChatColor.RED + "No lobby found for name " + args[0] + "!");
+				return false;
+			}
+			if(lobby instanceof LobbyGame)
+			{
+				LobbyGame l = (LobbyGame) lobby;
+				l.start();
+				return true;
+			}
+			sender.sendMessage(ChatColor.DARK_RED + "This lobby doesn't have a gamemode!");
+		}
+		return false;
+	}
+	
 	public void joinLobby(Player player, Lobby lobby)
 	{
 		for(Lobby l : lobbys)
@@ -110,12 +150,37 @@ public class LobbyManager
 		return lobbys.get(defaultLobby);
 	}
 	
+	/**
+	 * Gets a lobby by its name
+	 * @param name The name if the lobby
+	 * @return The Lobby with the name, or null if a lobby with this name doesn't exist
+	 */
 	public Lobby getLobby(String name)
 	{
 		for(Lobby lobby : lobbys)
 		{
 			if(lobby.getName().equalsIgnoreCase(name))
 				return lobby;
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the lobby this player is in
+	 * @param player The player to get it's lobby
+	 * @return The Lobbby the player is in, or null if it can't be found
+	 */
+	public Lobby getLobby(Player player)
+	{
+		for(Lobby l : lobbys)
+		{
+			for(Player p : l.getPlayers())
+			{
+				if(p.equals(player))
+				{
+					return l;
+				}
+			}
 		}
 		return null;
 	}

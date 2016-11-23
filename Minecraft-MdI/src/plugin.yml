@@ -19,3 +19,10 @@ commands:
         default: true
         permission: mdiServer.join
         permission-message: You are not allowed to join the lobby! Lel I have no clue why...
+        
+    startgame:
+        aliases: [start, go, forcestart]
+        description: Starts the specified round or the round you are currently in
+        usage: /startgame <Lobby>
+        permission: mdiServer.startGame
+        permission-message: You are not allowed to force the game to start!
