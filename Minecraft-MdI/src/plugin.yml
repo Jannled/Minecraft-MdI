@@ -1,6 +1,6 @@
 name: MdI-Server
 main: com.github.jannled.mdiServer.MdIServer
-load: POSTWORLD
+load: STARTUP
 version: 0.0.1
 author: Jannled
 description: One server for many gamemodes
@@ -26,3 +26,10 @@ commands:
         usage: /startgame <Lobby>
         permission: mdiServer.startGame
         permission-message: You are not allowed to force the game to start!
+        
+    goto:
+        aliases: [world, changeworld, move]
+        description: Move to the specified destination
+        usage: /goto [X] [Y] [Z] <World> <PlayerToMove> or /goto <PlayerToMove> [PlayerDestination]
+        permission: mdiServer.goto
+        permission-message: You are not allowed to teleport!

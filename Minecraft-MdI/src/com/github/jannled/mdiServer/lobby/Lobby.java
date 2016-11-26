@@ -11,6 +11,7 @@ public class Lobby
 {
 	private String name;
 	private ArrayList<Player> players = new ArrayList<Player>();
+	//Inventory inventory = Bukkit.createBossBar("Hello", BarColor.GREEN, BarStyle.SEGMENTED_20);
 	
 	Location spawn;
 	

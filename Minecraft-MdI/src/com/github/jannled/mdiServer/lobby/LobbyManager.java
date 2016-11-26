@@ -4,14 +4,12 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
-import com.github.jannled.mdiServer.gamemodes.CaptureTheFlag;
 
 public class LobbyManager
 {
@@ -23,8 +21,12 @@ public class LobbyManager
 	public LobbyManager(MdIServer main)
 	{
 		this.main = main;
-		lobbys.add(new Lobby("Spawn", new Location(Bukkit.getServer().getWorlds().get(0), 0, 100, 0)));
-		lobbys.add(new LobbyGame("CTF", new Location(Bukkit.getWorlds().get(0), 33, 64, 33), new CaptureTheFlag(360)));
+		//lobbys.add(new LobbyGame("CTF", new Location(main.getWorldManager().getDefaultWorld(), 33, 64, 33), new CaptureTheFlag(360)));
+	}
+	
+	public void loadLobbys()
+	{
+		
 	}
 	
 	public boolean cmdJoin(CommandSender sender, Command command, String name, String[] args)

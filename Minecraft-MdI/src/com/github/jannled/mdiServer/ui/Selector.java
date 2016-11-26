@@ -31,7 +31,6 @@ public class Selector implements Listener
 	@EventHandler
 	public void onPlayerUse(PlayerInteractEvent e)
 	{
-		e.getPlayer().sendMessage("" + e.getItem() + ":" + lobbySelector);
 		if(compareItems(e.getItem(), lobbySelector))
 		{
 			e.getPlayer().sendMessage("Hiiiiiiiiiii");
@@ -46,8 +45,7 @@ public class Selector implements Listener
 	
 	public static boolean compareItems(ItemStack item1, ItemStack item2)
 	{
-		if(!item1.getItemMeta().get)
-		if(!item1.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName()))
+		if(item1==null || item2 == null)
 		{
 			return false;
 		}
@@ -55,6 +53,18 @@ public class Selector implements Listener
 		{
 			return false;
 		}
+		if((item1.getItemMeta().getDisplayName() != null) || (item2.getItemMeta().getDisplayName() != null))
+		{
+			if(!item1.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName()))
+			{
+				return false;
+			}
+		}
 		return true;
+	}
+	
+	public void showLobbySelector()
+	{
+		
 	}
 }
