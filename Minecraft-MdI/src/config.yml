@@ -12,11 +12,21 @@
 #         zpos: 0
 #         gamemode: none
 #     ExamplePvP:
-#         world: worldname
-#         xpos: 0
-#         ypos: 100
-#         zpos: 0
-#         gamemode: CaptureTheFlag
+#         world: world
+#         xpos: 33
+#         ypos: 64
+#         zPos: 33
+#         gamemode: 
+#             name: CaptureTheFlag
+#             roundlength: 300
+#             red: 
+#                 spawnx: 0
+#                 spawny: 100
+#                 spawnz: 0
+#             blue: 
+#                 spawnx: 20
+#                 spawny: 100
+#                 spawnz: 20
 #
 # Gamemodes: CaptureTheFlag, Spleef
 
@@ -27,15 +37,27 @@ Lobbys:
         ypos: 100
         zpos: 0
         gamemode: none
+        
     GTM:
         world: GTM
         xpos: -346
         ypos: 64
         zpos: 160
         gamemode: none
+        
     CTF:
         world: world
         xpos: 33
         ypos: 64
         zPos: 33
-        gamemode: CaptureTheFlag
+        gamemode: 
+            name: CaptureTheFlag
+            roundlength: 300
+            red: 
+                spawnx: 0
+                spawny: 100
+                spawnz: 0
+            blue: 
+                spawnx: 20
+                spawny: 100
+                spawnz: 20

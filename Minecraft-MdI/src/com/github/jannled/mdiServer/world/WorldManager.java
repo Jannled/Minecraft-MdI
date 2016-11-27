@@ -15,16 +15,12 @@ import org.bukkit.event.world.WorldUnloadEvent;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
-import com.github.jannled.mdiServer.gamemodes.CaptureTheFlag;
-import com.github.jannled.mdiServer.lobby.Lobby;
-import com.github.jannled.mdiServer.lobby.LobbyGame;
 
 public class WorldManager implements Listener
 {
 	MdIServer main;
 	
 	private int defaultWorld = 0;
-	boolean init = false;
 	
 	public WorldManager(MdIServer main)
 	{
@@ -42,11 +38,6 @@ public class WorldManager implements Listener
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent e)
 	{
-		if(!init)
-		{
-			main.getLobbyManager().getLobbys().add(new Lobby("Spawn", new Location(main.getWorldManager().getDefaultWorld(), 0, 100, 0)));
-			main.getLobbyManager().getLobbys().add(new LobbyGame("CTF", new Location(main.getWorldManager().getDefaultWorld(), 33, 64, 33), new CaptureTheFlag(360)));
-		}
 		main.getLogger().info("WorldManager: Loaded world " + e.getWorld().getName() +"!");
 	}
 	

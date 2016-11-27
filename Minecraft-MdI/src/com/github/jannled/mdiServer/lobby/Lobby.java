@@ -19,6 +19,9 @@ public class Lobby
 	{
 		this.name = name;
 		this.spawn = spawnLocation;
+		spawnLocation.setX(spawnLocation.getX()+0.5);
+		spawnLocation.setY(spawnLocation.getY()+0.5);
+		spawnLocation.setZ(spawnLocation.getZ()+0.5);
 	}
 
 	public void joinLobby(Player player)

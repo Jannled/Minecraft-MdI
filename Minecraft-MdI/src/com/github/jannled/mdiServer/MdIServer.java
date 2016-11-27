@@ -1,6 +1,8 @@
 package com.github.jannled.mdiServer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -25,8 +27,13 @@ public class MdIServer extends JavaPlugin
 	
 	private final static String pluginName = "MdI-Server";
 	
+	//All commands that are not in other classes (Like in the Lobby manager)
 	private Ping cmdPing = new Ping();
 	
+	//All Special Abilities
+	//private PlayerPickup playerPickup;
+	
+	//All Manager instances
 	private WorldManager worldManager;
 	private PlayerManager playerManager;
 	private LobbyManager lobbyManager;
@@ -45,9 +52,14 @@ public class MdIServer extends JavaPlugin
 		this.lobbyManager = new LobbyManager(this);
 		this.playerManager = new PlayerManager(this);
 		this.selector = new Selector(this);
+		
+		//this.playerPickup = new PlayerPickup();
+		
 		getServer().getPluginManager().registerEvents(worldManager, this);
 		getServer().getPluginManager().registerEvents(playerManager, this);
 		getServer().getPluginManager().registerEvents(selector, this);
+		
+		//getServer().getPluginManager().registerEvents(playerPickup, this);
 		
 		saveDefaultConfig();
 		
@@ -104,10 +116,13 @@ public class MdIServer extends JavaPlugin
 	 */
 	public void loadConfig()
 	{
-		getLogger().info("Loading config files! ");
 		Bukkit.broadcast(ChatColor.GREEN + "Loading config files! ", "mdiServer.mdiServer");
+		getLogger().info("Loading config files!");
 		reloadConfig();
-		String[] lobbys = config.getConfigurationSection("Lobbys").getKeys(false).toArray(new String[config.getConfigurationSection("Lobbys").getKeys(false).size()]);
+		Set<String> lobbysConf = config.getConfigurationSection("Lobbys").getKeys(false);
+		String[] lobbys = lobbysConf.toArray(new String[lobbysConf.size()]);
+		
+		getLogger().info("Lobbys in config" + Arrays.toString(lobbys));
 		ArrayList<String> worlds = new ArrayList<String>();
 		for(String l : lobbys)
 		{
@@ -118,6 +133,7 @@ public class MdIServer extends JavaPlugin
 			}
 		}
 		lobbyManager.loadLobbys(lobbys);
+		getLogger().info("Loaded config files! ");
 	}
 	
 	public boolean cmdMdIServer(CommandSender sender, Command command, String name, String[] args)

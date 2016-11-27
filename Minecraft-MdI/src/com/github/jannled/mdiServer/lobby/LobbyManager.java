@@ -1,6 +1,7 @@
 package com.github.jannled.mdiServer.lobby;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,28 +37,22 @@ public class LobbyManager
 		FileConfiguration config = main.getConfig();
 		for(String l : lobbys)
 		{
+			System.out.println("Loading lobby " + l);
 			Lobby newLobby = null;
 			String[] split = l.split("\\.");
 			String name = split[split.length-1];
-			World world = Bukkit.getWorld(config.getConfigurationSection(l).getString("world"));
-			double x = config.getConfigurationSection(l).getDouble("xpos");
-			double y = config.getConfigurationSection(l).getDouble("ypos");
-			double z = config.getConfigurationSection(l).getDouble("zpos");
-			String gamemodeName = config.getConfigurationSection(l).getString("gamemode");
+			World world = Bukkit.getWorld(config.getConfigurationSection("Lobbys." + l).getString("world"));
+			double x = config.getConfigurationSection("Lobbys." + l).getDouble("xpos");
+			double y = config.getConfigurationSection("Lobbys." + l).getDouble("ypos");
+			double z = config.getConfigurationSection("Lobbys." + l).getDouble("zpos");
+			String gamemodeName = config.getConfigurationSection("Lobbys." + l).getString("gamemode");
 			Gamemode gamemode = null;
 			if(!gamemodeName.equals("none"))
 			{
-				if(gamemodeName.equals("CaptureTheFlag"))
+				gamemode = loadGamemode(gamemodeName);
+				if(gamemode == null)
 				{
-					gamemode = new CaptureTheFlag(300);
-				}
-				else if(gamemodeName.equals("Spleef"))
-				{
-					gamemode = new Spleef(300);
-				}
-				else
-				{
-					main.getLogger().warning("Could not find specified Gamemode " + gamemodeName + "!");
+					main.getLogger().warning("The gamemode " + gamemodeName + " was not found");
 					continue;
 				}
 				newLobby = new LobbyGame(name, new Location(world, x, y, z), gamemode);
@@ -68,6 +63,26 @@ public class LobbyManager
 			}
 			newLobbys.add(newLobby);
 		}
+		System.out.println(Arrays.toString(newLobbys.toArray()));
+		this.lobbys = newLobbys;
+	}
+	
+	public Gamemode loadGamemode(String gamemodeName)
+	{
+		Gamemode gamemode = null;
+		if(gamemodeName.equals("CaptureTheFlag"))
+		{
+			gamemode = new CaptureTheFlag(300);
+		}
+		else if(gamemodeName.equals("Spleef"))
+		{
+			gamemode = new Spleef(300);
+		}
+		else
+		{
+			main.getLogger().warning("Could not find specified Gamemode " + gamemodeName + "!");
+		}
+		return gamemode;
 	}
 	
 	public boolean cmdJoin(CommandSender sender, Command command, String name, String[] args)

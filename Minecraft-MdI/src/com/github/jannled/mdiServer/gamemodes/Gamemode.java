@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -29,6 +30,8 @@ public abstract class Gamemode implements Countdown
 	
 	private ScoreboardManager manager = Bukkit.getScoreboardManager();
 	private Scoreboard scoreboard = manager.getNewScoreboard();
+	private Team[] teams;
+	private Location[] spawns;
 	private ArrayList<org.bukkit.scoreboard.Team> scoreboardTeams = new ArrayList<org.bukkit.scoreboard.Team>();
 
 	private LobbyGame lobby;
@@ -46,8 +49,10 @@ public abstract class Gamemode implements Countdown
 	 * @param lobby The Lobby for the gamemode, where the Gamemode gets the players from
 	 * @param maxRoundLength The length in seconds after the round ends. It can be stopped by calling <code>stopRound()</code> before the countdown has reached zero
 	 */
-	public Gamemode(int maxRoundLength)
+	public Gamemode(Location[] spawns, Team[] teams, int maxRoundLength)
 	{
+		this.spawns = spawns;
+		this.teams = teams;
 		this.maxRoundLength = maxRoundLength;
 	}
 	
