@@ -4,12 +4,18 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
+import com.github.jannled.mdiServer.gamemodes.CaptureTheFlag;
+import com.github.jannled.mdiServer.gamemodes.Gamemode;
+import com.github.jannled.mdiServer.gamemodes.Spleef;
 
 public class LobbyManager
 {
@@ -24,9 +30,44 @@ public class LobbyManager
 		//lobbys.add(new LobbyGame("CTF", new Location(main.getWorldManager().getDefaultWorld(), 33, 64, 33), new CaptureTheFlag(360)));
 	}
 	
-	public void loadLobbys()
+	public void loadLobbys(String[] lobbys)
 	{
-		
+		ArrayList<Lobby> newLobbys = new ArrayList<Lobby>();
+		FileConfiguration config = main.getConfig();
+		for(String l : lobbys)
+		{
+			Lobby newLobby = null;
+			String[] split = l.split("\\.");
+			String name = split[split.length-1];
+			World world = Bukkit.getWorld(config.getConfigurationSection(l).getString("world"));
+			double x = config.getConfigurationSection(l).getDouble("xpos");
+			double y = config.getConfigurationSection(l).getDouble("ypos");
+			double z = config.getConfigurationSection(l).getDouble("zpos");
+			String gamemodeName = config.getConfigurationSection(l).getString("gamemode");
+			Gamemode gamemode = null;
+			if(!gamemodeName.equals("none"))
+			{
+				if(gamemodeName.equals("CaptureTheFlag"))
+				{
+					gamemode = new CaptureTheFlag(300);
+				}
+				else if(gamemodeName.equals("Spleef"))
+				{
+					gamemode = new Spleef(300);
+				}
+				else
+				{
+					main.getLogger().warning("Could not find specified Gamemode " + gamemodeName + "!");
+					continue;
+				}
+				newLobby = new LobbyGame(name, new Location(world, x, y, z), gamemode);
+			}
+			else
+			{
+				newLobby = new Lobby(name, new Location(world, x, y, z));
+			}
+			newLobbys.add(newLobby);
+		}
 	}
 	
 	public boolean cmdJoin(CommandSender sender, Command command, String name, String[] args)

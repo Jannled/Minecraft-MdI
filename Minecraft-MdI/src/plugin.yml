@@ -33,3 +33,17 @@ commands:
         usage: /goto [X] [Y] [Z] <World> <PlayerToMove> or /goto <PlayerToMove> [PlayerDestination]
         permission: mdiServer.goto
         permission-message: You are not allowed to teleport!
+        
+    mdiserver:
+        description: Control the MdI-Server Plugin
+        usage: /mdiServer reload
+        permission: mdiServer.mdiServer
+        permission-message: You don't have the control over the server!
+
+    ping:
+        description: Get the time the server needs to respond
+        usage: /ping
+        default: true
+        permission: mdiServer.ping
+        permission-message: You don't have the permission to let the server ping you!
+        

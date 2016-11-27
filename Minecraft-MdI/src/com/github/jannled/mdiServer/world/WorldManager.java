@@ -31,10 +31,12 @@ public class WorldManager implements Listener
 		this.main = main;
 	}
 	
-	public void loadWorlds()
+	public void loadWorlds(String[] names)
 	{
-		registerWorld("GTM");
-		main.getLobbyManager().getLobbys().add(new Lobby("Region", new Location(main.getWorldManager().getWorld(3), -346, 64, 160)));
+		for(String worldName : names)
+		{
+			registerWorld(worldName);
+		}
 	}
 	
 	@EventHandler
@@ -62,10 +64,11 @@ public class WorldManager implements Listener
 	
 	public boolean cmdGoto(CommandSender sender, Command command, String name, String[] args)
 	{
-		if(!sender.hasPermission(P.pluginPermission + "goto"))
+		if(!sender.hasPermission(P.pluginPermission + "goto") || args.length < 1)
 		{
 			return false;
 		}
+		
 		//goto [PlayerDestination]
 		if(args.length == 1 && sender instanceof Player)
 		{

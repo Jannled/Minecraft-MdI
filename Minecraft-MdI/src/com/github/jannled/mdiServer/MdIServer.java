@@ -1,24 +1,32 @@
 package com.github.jannled.mdiServer;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.jannled.mdiServer.commands.Ping;
 import com.github.jannled.mdiServer.countdown.CountdownTick;
 import com.github.jannled.mdiServer.lobby.LobbyManager;
 import com.github.jannled.mdiServer.player.PlayerManager;
 import com.github.jannled.mdiServer.ui.Selector;
 import com.github.jannled.mdiServer.world.WorldManager;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class MdIServer extends JavaPlugin
 {
 	public static CountdownTick countdown;
+	private FileConfiguration config = getConfig();
 	
 	private final static String pluginName = "MdI-Server";
+	
+	private Ping cmdPing = new Ping();
+	
 	private WorldManager worldManager;
 	private PlayerManager playerManager;
 	private LobbyManager lobbyManager;
@@ -48,7 +56,7 @@ public class MdIServer extends JavaPlugin
 			@Override 
 			public void run()
 			{
-				afterServerStart();
+				loadConfig();
 			}
 		});
 		
@@ -80,27 +88,46 @@ public class MdIServer extends JavaPlugin
 		{
 			return worldManager.cmdGoto(sender, command, name, args);
 		}
+		else if(command.getLabel().equalsIgnoreCase("mdiserver"))
+		{
+			return cmdMdIServer(sender, command, name, args);
+		}
+		else if(command.getLabel().equalsIgnoreCase("ping"))
+		{
+			return cmdPing.cmdPing(sender, command, name, args);
+		}
 		return false;
 	}
 	
-	@EventHandler
-	public void onWorldLoad(WorldLoadEvent e)
+	/**
+	 * Reload all configuration files
+	 */
+	public void loadConfig()
 	{
-		if(worldManager == null)
+		getLogger().info("Loading config files! ");
+		Bukkit.broadcast(ChatColor.GREEN + "Loading config files! ", "mdiServer.mdiServer");
+		reloadConfig();
+		String[] lobbys = config.getConfigurationSection("Lobbys").getKeys(false).toArray(new String[config.getConfigurationSection("Lobbys").getKeys(false).size()]);
+		ArrayList<String> worlds = new ArrayList<String>();
+		for(String l : lobbys)
 		{
-			getLogger().info("WorldManager hooked after world load");
-			this.worldManager = new WorldManager(this);
-			getServer().getPluginManager().registerEvents(worldManager, this);
+			String wn = config.getString("Lobbys." + l + ".world");
+			if(!worlds.contains(wn))
+			{
+				worldManager.registerWorld(wn);
+			}
 		}
+		lobbyManager.loadLobbys(lobbys);
 	}
 	
-	/**
-	 * Method gets called when the server has started and all worlds are loaded.
-	 */
-	public void afterServerStart()
+	public boolean cmdMdIServer(CommandSender sender, Command command, String name, String[] args)
 	{
-		worldManager.loadWorlds();
-		lobbyManager.loadLobbys();
+		if(args.length > 0 && args[0].equals("reload"))
+		{
+			loadConfig();
+			return true;
+		}
+		return false;
 	}
 	
 	public WorldManager getWorldManager()

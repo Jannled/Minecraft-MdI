@@ -117,12 +117,9 @@ public abstract class Gamemode implements Countdown
 		countdownTicks(time);
 		if(state == BEFORE_GAME)
 		{
-			for(Team t : lobby.getTeams())
+			for(Player p : lobby.getPlayers())
 			{
-				for(Player p : t.getPlayers())
-				{
-					countdownForPlayers(p, time);
-				}
+				countdownForPlayers(p, time);
 			}
 		}
 		else if(state == IN_GAME)
@@ -158,10 +155,10 @@ public abstract class Gamemode implements Countdown
 		{
 			Score score = roundStats.getScore(t.getName());
 			score.setScore(t.getTeamPoints());
-			for(Player p : t.getPlayers())
-			{
-				p.setScoreboard(scoreboard);
-			}
+		}
+		for(Player p : lobby.getPlayers())
+		{
+			p.setScoreboard(scoreboard);
 		}
 	}
 	
