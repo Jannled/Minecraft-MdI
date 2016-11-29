@@ -1,10 +1,14 @@
 package com.github.jannled.mdiServer.gamemodes;
 
+import org.bukkit.Location;
+
+import com.github.jannled.mdiServer.lobby.Team;
+
 public class CaptureTheFlag extends Gamemode
 {
-	public CaptureTheFlag(int maxTime)
+	public CaptureTheFlag(Location[] spawns, Team[] teams, int maxTime)
 	{
-		super(maxTime);
+		super(spawns, teams, maxTime);
 	}
 
 	@Override

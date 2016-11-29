@@ -72,11 +72,11 @@ public class LobbyManager
 		Gamemode gamemode = null;
 		if(gamemodeName.equals("CaptureTheFlag"))
 		{
-			gamemode = new CaptureTheFlag(300);
+			//gamemode = new CaptureTheFlag(300);
 		}
 		else if(gamemodeName.equals("Spleef"))
 		{
-			gamemode = new Spleef(300);
+			//gamemode = new Spleef(300);
 		}
 		else
 		{
