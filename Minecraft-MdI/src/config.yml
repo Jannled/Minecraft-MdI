@@ -54,6 +54,7 @@ Lobbys:
             name: CaptureTheFlag
             roundlength: 300
             red: 
+                color: §3
                 spawnx: 0
                 spawny: 100
                 spawnz: 0

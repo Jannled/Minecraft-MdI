@@ -185,6 +185,16 @@ public abstract class Gamemode implements Countdown
 		return state;
 	}
 	
+	public Location[] getSpawns()
+	{
+		return spawns;
+	}
+	
+	public Team[] getTeams()
+	{
+		return teams;
+	}
+	
 	/**
 	 * The lobby that starts the gamemode, and keeps track of the players and teams
 	 * @param lobby The host lobby

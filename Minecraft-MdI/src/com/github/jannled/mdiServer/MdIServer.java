@@ -16,7 +16,7 @@ import com.github.jannled.mdiServer.commands.Ping;
 import com.github.jannled.mdiServer.countdown.CountdownTick;
 import com.github.jannled.mdiServer.lobby.LobbyManager;
 import com.github.jannled.mdiServer.player.PlayerManager;
-import com.github.jannled.mdiServer.ui.Selector;
+import com.github.jannled.mdiServer.ui.Guimanager;
 import com.github.jannled.mdiServer.world.WorldManager;
 
 import net.md_5.bungee.api.ChatColor;
@@ -38,7 +38,7 @@ public class MdIServer extends JavaPlugin
 	private WorldManager worldManager;
 	private PlayerManager playerManager;
 	private LobbyManager lobbyManager;
-	private Selector selector;
+	private Guimanager guiManager;
 	
 	public MdIServer()
 	{
@@ -52,13 +52,12 @@ public class MdIServer extends JavaPlugin
 		this.worldManager = new WorldManager(this);
 		this.lobbyManager = new LobbyManager(this);
 		this.playerManager = new PlayerManager(this);
-		this.selector = new Selector(this);
+		this.guiManager = new Guimanager(this);
 		
 		this.playerPickup = new PlayerPickup();
 		
 		getServer().getPluginManager().registerEvents(worldManager, this);
 		getServer().getPluginManager().registerEvents(playerManager, this);
-		getServer().getPluginManager().registerEvents(selector, this);
 		
 		getServer().getPluginManager().registerEvents(playerPickup, this);
 		
@@ -162,9 +161,9 @@ public class MdIServer extends JavaPlugin
 		return playerManager;
 	}
 	
-	public Selector getSelector()
+	public Guimanager getGuimanager()
 	{
-		return selector;
+		return guiManager;
 	}
 	
     public static MdIServer getInstance() 

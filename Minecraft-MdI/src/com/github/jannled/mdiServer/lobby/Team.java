@@ -2,20 +2,23 @@ package com.github.jannled.mdiServer.lobby;
 
 import java.util.ArrayList;
 
-import org.bukkit.DyeColor;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class Team
 {
 	private String name;
-	private DyeColor color;
+	private ChatColor color;
+	private Location spawn;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private int teamScore;
 	
-	public Team(String name, DyeColor color)
+	public Team(String name, ChatColor color, Location spawn)
 	{
 		this.name = name;
 		this.color = color;
+		this.spawn = spawn;
 	}
 	
 	public void addPlayer(Player player)
@@ -33,7 +36,7 @@ public class Team
 		return name;
 	}
 	
-	public DyeColor getTeamColor()
+	public ChatColor getTeamColor()
 	{
 		return color;
 	}
@@ -46,6 +49,11 @@ public class Team
 	public void addTeamPoints(int points)
 	{
 		teamScore += points;
+	}
+	
+	public Location getSpawn()
+	{
+		return spawn;
 	}
 	
 	public ArrayList<Player> getPlayers()

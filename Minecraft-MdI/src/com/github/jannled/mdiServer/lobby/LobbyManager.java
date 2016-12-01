@@ -9,14 +9,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
-import com.github.jannled.mdiServer.gamemodes.CaptureTheFlag;
 import com.github.jannled.mdiServer.gamemodes.Gamemode;
-import com.github.jannled.mdiServer.gamemodes.Spleef;
 
 public class LobbyManager
 {
@@ -37,7 +36,7 @@ public class LobbyManager
 		FileConfiguration config = main.getConfig();
 		for(String l : lobbys)
 		{
-			System.out.println("Loading lobby " + l);
+			main.getLogger().info("LobbyManager: Loading lobby " + l);
 			Lobby newLobby = null;
 			String[] split = l.split("\\.");
 			String name = split[split.length-1];
@@ -49,7 +48,7 @@ public class LobbyManager
 			Gamemode gamemode = null;
 			if(!gamemodeName.equals("none"))
 			{
-				gamemode = loadGamemode(gamemodeName);
+				//TODO gamemode = loadGamemode(world, l, gamemodeName);
 				if(gamemode == null)
 				{
 					main.getLogger().warning("The gamemode " + gamemodeName + " was not found");
@@ -67,12 +66,32 @@ public class LobbyManager
 		this.lobbys = newLobbys;
 	}
 	
-	public Gamemode loadGamemode(String gamemodeName)
+	public Gamemode loadGamemode(World world, String lobbyName, String gamemodeName)
 	{
+		final String path = "Lobbys." + lobbyName + "." + gamemodeName;
+		final FileConfiguration config = main.getConfig();
 		Gamemode gamemode = null;
+		Team[] teams = null;
+		
+		//Load teams
+		System.out.println("Now loading: " + path);
+		ConfigurationSection c = config.getConfigurationSection(path);
+		teams = new Team[c.getKeys(false).size()];
+		int pos = 0;
+		for(String s : c.getKeys(false))
+		{	
+			final String teamPath = "." + s + ".";
+			ChatColor color = ChatColor.getByChar(teamPath + "color");
+			double x = c.getDouble(teamPath + "spawnx");
+			double y = c.getDouble(teamPath + "spawny");
+			double z = c.getDouble(teamPath + "spawnz");
+			teams[pos] = new Team(s, color, new Location(world, x, y, z));
+			pos++;
+		}
+		
 		if(gamemodeName.equals("CaptureTheFlag"))
 		{
-			//gamemode = new CaptureTheFlag(300);
+			
 		}
 		else if(gamemodeName.equals("Spleef"))
 		{

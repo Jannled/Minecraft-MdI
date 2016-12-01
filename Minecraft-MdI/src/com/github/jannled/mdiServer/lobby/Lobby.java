@@ -6,8 +6,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.github.jannled.mdiServer.P;
+import com.github.jannled.mdiServer.ui.Representable;
 
-public class Lobby
+public class Lobby implements Representable
 {
 	private String name;
 	private ArrayList<Player> players = new ArrayList<Player>();
@@ -62,5 +63,11 @@ public class Lobby
 	public Location getSpawnLocation()
 	{
 		return spawn;
+	}
+
+	@Override
+	public boolean clicked(Player player)
+	{
+		return true;
 	}
 }
