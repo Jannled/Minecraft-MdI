@@ -12,10 +12,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
 import com.github.jannled.mdiServer.gamemodes.Gamemode;
+import com.github.jannled.mdiServer.ui.Gui;
+import com.github.jannled.mdiServer.ui.Guientry;
 
 public class LobbyManager
 {
@@ -33,6 +36,7 @@ public class LobbyManager
 	public void loadLobbys(String[] lobbys)
 	{
 		ArrayList<Lobby> newLobbys = new ArrayList<Lobby>();
+		ArrayList<Guientry> guiEntrys = new ArrayList<Guientry>();
 		FileConfiguration config = main.getConfig();
 		for(String l : lobbys)
 		{
@@ -48,7 +52,7 @@ public class LobbyManager
 			Gamemode gamemode = null;
 			if(!gamemodeName.equals("none"))
 			{
-				//TODO gamemode = loadGamemode(world, l, gamemodeName);
+				gamemode = loadGamemode(world, l, gamemodeName);
 				if(gamemode == null)
 				{
 					main.getLogger().warning("The gamemode " + gamemodeName + " was not found");
@@ -60,15 +64,18 @@ public class LobbyManager
 			{
 				newLobby = new Lobby(name, new Location(world, x, y, z));
 			}
+			System.out.println("Dead code? Now at Lobby " + newLobby);
 			newLobbys.add(newLobby);
+			guiEntrys.add(new Guientry(newLobby));
 		}
 		System.out.println(Arrays.toString(newLobbys.toArray()));
 		this.lobbys = newLobbys;
+		main.getGuimanager().registerGui(new Gui(guiEntrys, InventoryType.HOPPER));
 	}
 	
 	public Gamemode loadGamemode(World world, String lobbyName, String gamemodeName)
 	{
-		final String path = "Lobbys." + lobbyName + "." + gamemodeName;
+		final String path = "Lobbys." + lobbyName + ".gamemode";
 		final FileConfiguration config = main.getConfig();
 		Gamemode gamemode = null;
 		Team[] teams = null;

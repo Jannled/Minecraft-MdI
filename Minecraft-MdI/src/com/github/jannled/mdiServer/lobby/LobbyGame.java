@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.github.jannled.mdiServer.P;
 import com.github.jannled.mdiServer.countdown.Countdown;
@@ -22,7 +24,19 @@ public class LobbyGame extends Lobby implements Countdown
 	 */
 	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode)
 	{
-		super(name, spawnLocation);
+		super(name, spawnLocation, standardItem(name));
+		gamemode.setLobby(this);
+		this.gamemode = gamemode;
+	}
+	
+	/**
+	 * Creates a new Lobby with no teams
+	 * @param name The Name of the Lobby, will be displayed if a player is moved to that lobby
+	 * @param spawnLocation The Location where the player will be teleported to, when he enters the lobby 
+	 */
+	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode, ItemStack item)
+	{
+		super(name, spawnLocation, item);
 		gamemode.setLobby(this);
 		this.gamemode = gamemode;
 	}
@@ -74,5 +88,12 @@ public class LobbyGame extends Lobby implements Countdown
 	public void end()
 	{
 		
+	}
+	
+	private static ItemStack standardItem(String name)
+	{
+		ItemStack buffer = new ItemStack(Material.REDSTONE_LAMP_ON);
+		buffer.getItemMeta().setDisplayName(name);
+		return buffer;
 	}
 }
