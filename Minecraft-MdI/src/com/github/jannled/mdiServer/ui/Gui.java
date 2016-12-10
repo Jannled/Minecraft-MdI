@@ -3,6 +3,7 @@ package com.github.jannled.mdiServer.ui;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -14,25 +15,54 @@ import com.github.jannled.mdiServer.MdIServer;
 
 public class Gui
 {
+	String name;
 	Inventory menu;
 	ArrayList<Guientry> entrys;
 	ItemStack opener;
 	
 	public Gui(ArrayList<Guientry> entrys, InventoryType type)
 	{
-		this.menu = Bukkit.createInventory(null, type);
-		addToInv(entrys);
+		this.name = ChatColor.GOLD + "GUI";
+		this.menu = Bukkit.createInventory(null, type, name);
 		this.opener = new ItemStack(Material.COMPASS);
+		addToInv(entrys);
 		ItemMeta itmeta = opener.getItemMeta();
-		itmeta.setDisplayName("GUI");
+		itmeta.setDisplayName(name);
 		opener.setItemMeta(itmeta);
 	}
 	
 	public Gui(ArrayList<Guientry> entrys, InventoryType type, ItemStack opener)
 	{
-		this.menu = Bukkit.createInventory(null, type);
-		addToInv(entrys);
+		if(opener.getItemMeta().getDisplayName()!=null)
+			this.name = opener.getItemMeta().getDisplayName();
+		else
+			this.name = ChatColor.GOLD + "GUI";
+		this.menu = Bukkit.createInventory(null, type, name);
+		
 		this.opener = opener;
+		addToInv(entrys);
+	}
+	
+	public Gui(ArrayList<Guientry> entrys, int type)
+	{
+		this.name = ChatColor.GOLD + "GUI";
+		this.menu = Bukkit.createInventory(null, type, name);
+		this.opener = new ItemStack(Material.COMPASS);
+		addToInv(entrys);
+		ItemMeta itmeta = opener.getItemMeta();
+		itmeta.setDisplayName(name);
+		opener.setItemMeta(itmeta);
+	}
+	
+	public Gui(ArrayList<Guientry> entrys, int type, ItemStack opener)
+	{
+		if(opener.getItemMeta().getDisplayName()!=null)
+			this.name = opener.getItemMeta().getDisplayName();
+		else
+			this.name = ChatColor.GOLD + "GUI";
+		this.menu = Bukkit.createInventory(null, type, name);
+		this.opener = opener;
+		addToInv(entrys);
 	}
 	
 	public void clicked(Player player, ItemStack item)
@@ -40,7 +70,6 @@ public class Gui
 		if(item == null)
 			return;
 		
-		player.sendMessage("Item " + item.toString() + " was clicked!");
 		for(Guientry e : entrys)
 		{
 			if(e.getItem().equals(item))
@@ -67,13 +96,18 @@ public class Gui
 	
 	private boolean addToInv(ArrayList<Guientry> entrys)
 	{
+		boolean state = false;
 		this.entrys = entrys;
 		for(Guientry e : entrys)
 		{
-			int pos = e.getPosition();
-			while(menu.getItem(pos)!=null)
+			if(menu == null)
 			{
-				System.out.println("Item at index " + pos + menu.getItem(pos));
+				MdIServer.getInstance().getLogger().warning("The Menu for Gui " + name + " is null!");
+				continue;
+			}
+			int pos = e.getPosition();
+			while(menu.getItem(pos) != null)
+			{
 				if(pos+1>menu.getSize()-1)
 				{
 					MdIServer.getInstance().getLogger().warning("The item " + e.getItem().toString() + " exceeds the bounds of the Inventory");
@@ -82,8 +116,13 @@ public class Gui
 				pos++;
 			}
 			menu.setItem(pos, e.getItem());
-			return true;
+			state = true;
 		}
-		return false;
+		return state;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 }

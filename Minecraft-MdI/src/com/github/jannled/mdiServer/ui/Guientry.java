@@ -22,8 +22,8 @@ public class Guientry
 		else
 		{
 			item = represented.getItem();
-			System.out.println(represented.getItem());
 		}
+		this.represented = represented;
 	}
 	
 	public Guientry(Representable represented, int position)
@@ -35,8 +35,8 @@ public class Guientry
 		else
 		{
 			item = represented.getItem();
-			System.out.println(represented.getItem());
 		}
+		this.represented = represented;
 		this.position = position;
 	}
 	

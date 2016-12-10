@@ -24,7 +24,7 @@ public class LobbyGame extends Lobby implements Countdown
 	 */
 	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode)
 	{
-		super(name, spawnLocation, standardItem(name));
+		super(name, spawnLocation, ChatColor.GRAY + "Go to PvP-Lobby " + ChatColor.RED + name + ChatColor.GRAY + "!", Material.REDSTONE_LAMP_OFF);
 		gamemode.setLobby(this);
 		this.gamemode = gamemode;
 	}
@@ -88,12 +88,5 @@ public class LobbyGame extends Lobby implements Countdown
 	public void end()
 	{
 		
-	}
-	
-	private static ItemStack standardItem(String name)
-	{
-		ItemStack buffer = new ItemStack(Material.REDSTONE_LAMP_ON);
-		buffer.getItemMeta().setDisplayName(name);
-		return buffer;
 	}
 }

@@ -30,6 +30,8 @@
 #
 # Gamemodes: CaptureTheFlag, Spleef
 
+# The first specified Lobby should not have a gamemode, because it is the first Lobby the player spawns in.
+
 Lobbys:
     Spawn:
         world: world
@@ -53,12 +55,14 @@ Lobbys:
         gamemode: 
             name: CaptureTheFlag
             roundlength: 300
-            red: 
-                color: §3
-                spawnx: 0
-                spawny: 100
-                spawnz: 0
-            blue: 
-                spawnx: 20
-                spawny: 100
-                spawnz: 20
+            teams:
+                red: 
+                    color: §3
+                    spawnx: 0
+                    spawny: 100
+                    spawnz: 0
+                blue: 
+                    color: §4
+                    spawnx: 20
+                    spawny: 100
+                    spawnz: 20

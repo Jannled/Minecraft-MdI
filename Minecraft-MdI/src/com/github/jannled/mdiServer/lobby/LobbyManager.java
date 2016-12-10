@@ -1,11 +1,11 @@
 package com.github.jannled.mdiServer.lobby;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,10 +13,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
+import com.github.jannled.mdiServer.gamemodes.CaptureTheFlag;
 import com.github.jannled.mdiServer.gamemodes.Gamemode;
+import com.github.jannled.mdiServer.gamemodes.Spleef;
 import com.github.jannled.mdiServer.ui.Gui;
 import com.github.jannled.mdiServer.ui.Guientry;
 
@@ -30,7 +34,6 @@ public class LobbyManager
 	public LobbyManager(MdIServer main)
 	{
 		this.main = main;
-		//lobbys.add(new LobbyGame("CTF", new Location(main.getWorldManager().getDefaultWorld(), 33, 64, 33), new CaptureTheFlag(360)));
 	}
 	
 	public void loadLobbys(String[] lobbys)
@@ -44,15 +47,16 @@ public class LobbyManager
 			Lobby newLobby = null;
 			String[] split = l.split("\\.");
 			String name = split[split.length-1];
-			World world = Bukkit.getWorld(config.getConfigurationSection("Lobbys." + l).getString("world"));
+			World world = Bukkit.getWorld(config.getConfigurationSection("Lobbys." + name).getString("world"));
 			double x = config.getConfigurationSection("Lobbys." + l).getDouble("xpos");
 			double y = config.getConfigurationSection("Lobbys." + l).getDouble("ypos");
 			double z = config.getConfigurationSection("Lobbys." + l).getDouble("zpos");
-			String gamemodeName = config.getConfigurationSection("Lobbys." + l).getString("gamemode");
 			Gamemode gamemode = null;
-			if(!gamemodeName.equals("none"))
+			//Check if the Lobby has a gamemode
+			if(!config.getString("Lobbys." + l + ".gamemode").equals("none"))
 			{
-				gamemode = loadGamemode(world, l, gamemodeName);
+				String gamemodeName = "Lobbys." + l + ".gamemode.name";
+				gamemode = loadGamemode(world, l);
 				if(gamemode == null)
 				{
 					main.getLogger().warning("The gamemode " + gamemodeName + " was not found");
@@ -64,25 +68,35 @@ public class LobbyManager
 			{
 				newLobby = new Lobby(name, new Location(world, x, y, z));
 			}
-			System.out.println("Dead code? Now at Lobby " + newLobby);
+			//Lobby has been created sucessfully, adding it to the list
 			newLobbys.add(newLobby);
 			guiEntrys.add(new Guientry(newLobby));
 		}
-		System.out.println(Arrays.toString(newLobbys.toArray()));
 		this.lobbys = newLobbys;
-		main.getGuimanager().registerGui(new Gui(guiEntrys, InventoryType.HOPPER));
+		
+		//Decide how big the Container must be
+		int guiSize = ((int) guiEntrys.size() / 9 + 1) * 9;
+		ItemStack opener = new ItemStack(Material.COMPASS);
+		ItemMeta meta = opener.getItemMeta();
+		meta.setDisplayName(ChatColor.DARK_AQUA + "Lobby Selecter");
+		opener.setItemMeta(meta);
+		
+		if(guiEntrys.size()<6)
+			main.getGuimanager().registerGui(new Gui(guiEntrys, InventoryType.HOPPER, opener));
+		else
+			main.getGuimanager().registerGui(new Gui(guiEntrys, guiSize, opener));
 	}
 	
-	public Gamemode loadGamemode(World world, String lobbyName, String gamemodeName)
+	public Gamemode loadGamemode(World world, String lobbyName)
 	{
 		final String path = "Lobbys." + lobbyName + ".gamemode";
-		final FileConfiguration config = main.getConfig();
+		ConfigurationSection c = main.getConfig().getConfigurationSection(path);
+		String gamemodeName = c.getString(".name");
 		Gamemode gamemode = null;
 		Team[] teams = null;
+		int maxTime = c.getInt("roundlength");
 		
 		//Load teams
-		System.out.println("Now loading: " + path);
-		ConfigurationSection c = config.getConfigurationSection(path);
 		teams = new Team[c.getKeys(false).size()];
 		int pos = 0;
 		for(String s : c.getKeys(false))
@@ -95,14 +109,14 @@ public class LobbyManager
 			teams[pos] = new Team(s, color, new Location(world, x, y, z));
 			pos++;
 		}
-		
+		//Create new Gamemode
 		if(gamemodeName.equals("CaptureTheFlag"))
 		{
-			
+			gamemode = new CaptureTheFlag(teams, maxTime);
 		}
 		else if(gamemodeName.equals("Spleef"))
 		{
-			//gamemode = new Spleef(300);
+			gamemode = new Spleef(teams, maxTime);
 		}
 		else
 		{

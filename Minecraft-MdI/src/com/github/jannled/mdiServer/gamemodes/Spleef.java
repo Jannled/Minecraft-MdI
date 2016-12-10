@@ -1,15 +1,13 @@
 package com.github.jannled.mdiServer.gamemodes;
 
-import org.bukkit.Location;
-
 import com.github.jannled.mdiServer.lobby.Team;
 
 public class Spleef extends Gamemode
 {
 
-	public Spleef(Location[] spawns, Team[] teams, int maxRoundLength)
+	public Spleef(Team[] teams, int maxRoundLength)
 	{
-		super(spawns, teams, maxRoundLength);
+		super(teams, maxRoundLength);
 	}
 
 	@Override
