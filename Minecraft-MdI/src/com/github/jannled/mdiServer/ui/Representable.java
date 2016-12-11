@@ -6,8 +6,8 @@ import org.bukkit.inventory.ItemStack;
 public interface Representable
 {	
 	/**
-	 * Gets called when the representing item gets clicked by a player.
-	 * @param The player who has clicked on the item
+	 * Gets called when the representing item gets clicked by a com.github.jannled.mdiServer.player.
+	 * @param The com.github.jannled.mdiServer.player who has clicked on the item
 	 * @return If the interface should be closed.
 	 */
 	public boolean clicked(Player player);

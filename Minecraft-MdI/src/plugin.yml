@@ -47,3 +47,9 @@ commands:
         permission: mdiServer.ping
         permission-message: You don't have the permission to let the server ping you!
         
+    abilities: 
+        description: Manually gives you the desired special abilitie item
+        usage: /abilities {SmokeDash/PlayerPickup} <Player>
+        default: false
+        permission: mdiServer.abilities
+        permission-message: You are not allowed to give yourself an abilitie!

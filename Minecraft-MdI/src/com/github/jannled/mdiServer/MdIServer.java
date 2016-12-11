@@ -11,7 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.jannled.mdiServer.abilities.PlayerPickup;
+import com.github.jannled.mdiServer.abilities.Abilitiemanager;
 import com.github.jannled.mdiServer.commands.Ping;
 import com.github.jannled.mdiServer.countdown.CountdownTick;
 import com.github.jannled.mdiServer.lobby.LobbyManager;
@@ -31,14 +31,13 @@ public class MdIServer extends JavaPlugin
 	//All commands that are not in other classes (Like in the Lobby manager)
 	private Ping cmdPing = new Ping();
 	
-	//All Special Abilities
-	private PlayerPickup playerPickup;
 	
 	//All Manager instances
 	private WorldManager worldManager;
-	private PlayerManager playerManager;
 	private LobbyManager lobbyManager;
+	private PlayerManager playerManager;
 	private Guimanager guiManager;
+	private Abilitiemanager abilitieManager;
 	
 	public MdIServer()
 	{
@@ -53,13 +52,10 @@ public class MdIServer extends JavaPlugin
 		this.lobbyManager = new LobbyManager(this);
 		this.playerManager = new PlayerManager(this);
 		this.guiManager = new Guimanager(this);
-		
-		this.playerPickup = new PlayerPickup();
+		this.abilitieManager = new Abilitiemanager(this);
 		
 		getServer().getPluginManager().registerEvents(worldManager, this);
 		getServer().getPluginManager().registerEvents(playerManager, this);
-		
-		getServer().getPluginManager().registerEvents(playerPickup, this);
 		
 		saveDefaultConfig();
 		
@@ -107,6 +103,10 @@ public class MdIServer extends JavaPlugin
 		else if(command.getLabel().equalsIgnoreCase("ping"))
 		{
 			return cmdPing.cmdPing(sender, command, name, args);
+		}
+		else if(command.getLabel().equalsIgnoreCase("abilities"))
+		{
+			return abilitieManager.cmdAbilities(sender, command, name, args);
 		}
 		return false;
 	}
@@ -164,6 +164,11 @@ public class MdIServer extends JavaPlugin
 	public Guimanager getGuimanager()
 	{
 		return guiManager;
+	}
+	
+	public Abilitiemanager getAbilitieManager()
+	{
+		return abilitieManager;
 	}
 	
     public static MdIServer getInstance() 

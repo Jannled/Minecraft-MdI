@@ -154,7 +154,7 @@ public class LobbyManager
 				Player player = Bukkit.getPlayer(args[1]);
 				if(player==null)
 				{
-					sender.sendMessage(ChatColor.DARK_RED + "Could not find player " + ChatColor.GOLD + args[1] + ChatColor.DARK_RED + "!");
+					sender.sendMessage(ChatColor.DARK_RED + "Could not find com.github.jannled.mdiServer.player " + ChatColor.GOLD + args[1] + ChatColor.DARK_RED + "!");
 					return true;
 				}
 				joinLobby(player, lobby);
@@ -184,7 +184,7 @@ public class LobbyManager
 			Lobby lobby = getLobby(p);
 			if(lobby==null)
 			{
-				sender.sendMessage(ChatColor.RED + "Exception: No Lobby found for that player!");
+				sender.sendMessage(ChatColor.RED + "Exception: No Lobby found for that com.github.jannled.mdiServer.player!");
 				return false;
 			}
 			if(lobby instanceof LobbyGame)
@@ -225,9 +225,9 @@ public class LobbyManager
 	}
 	
 	/**
-	 * THis method checks if the player is still in any Lobby and teleports him there, if it still exists or brings him to spawn
-	 * @param player The player to reconnect to its lobby
-	 * @return The Lobby where the player is reconnected to. If the player is in no lobby, the default spawn lobby is returned
+	 * THis method checks if the com.github.jannled.mdiServer.player is still in any Lobby and teleports him there, if it still exists or brings him to spawn
+	 * @param com.github.jannled.mdiServer.player The com.github.jannled.mdiServer.player to reconnect to its lobby
+	 * @return The Lobby where the com.github.jannled.mdiServer.player is reconnected to. If the com.github.jannled.mdiServer.player is in no lobby, the default spawn lobby is returned
 	 */
 	public Lobby reconnectLobby(Player player)
 	{
@@ -264,9 +264,9 @@ public class LobbyManager
 	}
 	
 	/**
-	 * Gets the lobby this player is in
-	 * @param player The player to get it's lobby
-	 * @return The Lobbby the player is in, or null if it can't be found
+	 * Gets the lobby this com.github.jannled.mdiServer.player is in
+	 * @param com.github.jannled.mdiServer.player The com.github.jannled.mdiServer.player to get it's lobby
+	 * @return The Lobbby the com.github.jannled.mdiServer.player is in, or null if it can't be found
 	 */
 	public Lobby getLobby(Player player)
 	{

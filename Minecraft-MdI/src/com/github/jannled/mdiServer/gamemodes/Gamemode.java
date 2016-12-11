@@ -132,9 +132,9 @@ public abstract class Gamemode implements Countdown
 	}
 	
 	/**
-	 * This method gets called per second while the countdown before roundbegin ticks, for every player in this round 
+	 * This method gets called per second while the countdown before roundbegin ticks, for every com.github.jannled.mdiServer.player in this round 
 	 * <code>@Overwrite</code> this to create a custom countdown message.
-	 * @param p The player to send the countdown to
+	 * @param p The com.github.jannled.mdiServer.player to send the countdown to
 	 * @param time The seconds left after the countdown reaches zero
 	 */
 	public void countdownForPlayers(Player p, int time)

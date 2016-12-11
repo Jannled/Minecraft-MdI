@@ -19,8 +19,8 @@ public class LobbyGame extends Lobby implements Countdown
 	
 	/**
 	 * Creates a new Lobby with no teams
-	 * @param name The Name of the Lobby, will be displayed if a player is moved to that lobby
-	 * @param spawnLocation The Location where the player will be teleported to, when he enters the lobby 
+	 * @param name The Name of the Lobby, will be displayed if a com.github.jannled.mdiServer.player is moved to that lobby
+	 * @param spawnLocation The Location where the com.github.jannled.mdiServer.player will be teleported to, when he enters the lobby 
 	 */
 	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode)
 	{
@@ -31,8 +31,8 @@ public class LobbyGame extends Lobby implements Countdown
 	
 	/**
 	 * Creates a new Lobby with no teams
-	 * @param name The Name of the Lobby, will be displayed if a player is moved to that lobby
-	 * @param spawnLocation The Location where the player will be teleported to, when he enters the lobby 
+	 * @param name The Name of the Lobby, will be displayed if a com.github.jannled.mdiServer.player is moved to that lobby
+	 * @param spawnLocation The Location where the com.github.jannled.mdiServer.player will be teleported to, when he enters the lobby 
 	 */
 	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode, ItemStack item)
 	{
@@ -43,8 +43,8 @@ public class LobbyGame extends Lobby implements Countdown
 	
 	/**
 	 * Creates a new Lobby with the desired teams
-	 * @param name The Name of the Lobby, will be displayed if a player is moved to that lobby
-	 * @param spawnLocation The Location where the player will be teleported to, when he enters the lobby 
+	 * @param name The Name of the Lobby, will be displayed if a com.github.jannled.mdiServer.player is moved to that lobby
+	 * @param spawnLocation The Location where the com.github.jannled.mdiServer.player will be teleported to, when he enters the lobby 
 	 * @param team The teams you want to create
 	 */
 	public LobbyGame(String name, Location spawnLocation, Gamemode gamemode, Team... team)
