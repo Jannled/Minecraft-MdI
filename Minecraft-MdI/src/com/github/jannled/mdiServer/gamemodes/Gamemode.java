@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -27,7 +29,7 @@ public abstract class Gamemode implements Countdown
 	public final static int BEFORE_GAME = 1;
 	public final static int IN_GAME = 2;
 	public final static int AFTER_GAME = 3;
-	
+
 	private ScoreboardManager manager = Bukkit.getScoreboardManager();
 	private Scoreboard scoreboard = manager.getNewScoreboard();
 	private Team[] teams;
@@ -38,7 +40,7 @@ public abstract class Gamemode implements Countdown
 	private int maxRoundLength;
 	
 	/** Represents the state the game is currently in */
-	private int state = -1;
+	public int state = -1;
 	
 	/** The Scores on the right side */
 	private Objective roundStats;
@@ -48,10 +50,9 @@ public abstract class Gamemode implements Countdown
 	 * @param lobby The Lobby for the gamemode, where the Gamemode gets the players from
 	 * @param maxRoundLength The length in seconds after the round ends. It can be stopped by calling <code>stopRound()</code> before the countdown has reached zero
 	 */
-	public Gamemode(Team[] teams, int maxRoundLength)
+	public Gamemode(ConfigurationSection config)
 	{
-		this.teams = teams;
-		this.maxRoundLength = maxRoundLength;
+		loadConfig(config);
 	}
 	
 	/**
@@ -82,7 +83,7 @@ public abstract class Gamemode implements Countdown
 	
 	@Override
 	/**
-	 * 
+	 * Called when a counter reaches zero. If you want to stop the round manually, call <code>stopRound()</code>
 	 */
 	public void end()
 	{
@@ -151,6 +152,10 @@ public abstract class Gamemode implements Countdown
 		
 	}
 	
+	/**
+	 * Method gets called every second to update the scoreboard!
+	 * @param time
+	 */
 	public void updateScoreboard(int time)
 	{
 		scoreboard.getObjective(DisplaySlot.SIDEBAR).setDisplayName("Time remaining: " + time);
@@ -198,6 +203,11 @@ public abstract class Gamemode implements Countdown
 		return teams;
 	}
 	
+	public LobbyGame getLobby()
+	{
+		return lobby;
+	}
+	
 	/**
 	 * The lobby that starts the gamemode, and keeps track of the players and teams
 	 * @param lobby The host lobby
@@ -221,4 +231,17 @@ public abstract class Gamemode implements Countdown
 	 * Method gets called after the countdown started at <code>maxRoundLength</code> reaches zero or if <code>stopRound()</code> is called
 	 */
 	public abstract void after();
+	
+	protected void loadConfig(ConfigurationSection config)
+	{
+		String[] confTeams = (String[]) config.getConfigurationSection(".teams").getKeys(false).toArray();
+		teams = new Team[confTeams.length];
+		World world = lobby.getSpawnLocation().getWorld();
+		for(int i=0; i<confTeams.length; i++)
+		{
+			Location spawn = new Location(world, config.getDouble(".teams." + confTeams[i] + ".xpos"), config.getDouble(".teams." + confTeams[i] + ".ypos"), config.getDouble(".teams." + confTeams[i] + ".zpos"));
+			ChatColor color = ChatColor.getByChar(config.getString(".teams." + confTeams[i] + ".color"));
+			teams[i] = new Team(confTeams[i], color, spawn);
+		}
+	}
 }

@@ -94,7 +94,6 @@ public class LobbyManager
 		String gamemodeName = c.getString(".name");
 		Gamemode gamemode = null;
 		Team[] teams = null;
-		int maxTime = c.getInt("roundlength");
 		
 		//Load teams
 		teams = new Team[c.getKeys(false).size()];
@@ -112,11 +111,12 @@ public class LobbyManager
 		//Create new Gamemode
 		if(gamemodeName.equals("CaptureTheFlag"))
 		{
-			gamemode = new CaptureTheFlag(teams, maxTime);
+			//TODO Fill in params of Gamemodes
+			gamemode = new CaptureTheFlag(null);
 		}
 		else if(gamemodeName.equals("Spleef"))
 		{
-			gamemode = new Spleef(teams, maxTime);
+			gamemode = new Spleef(null);
 		}
 		else
 		{

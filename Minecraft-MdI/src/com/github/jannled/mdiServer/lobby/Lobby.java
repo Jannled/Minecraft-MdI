@@ -53,6 +53,10 @@ public class Lobby implements Representable
 		this.item = item;
 	}
 
+	/**
+	 * Add a Player to this Lobby
+	 * @param player The player to add to this lobby
+	 */
 	public void joinLobby(Player player)
 	{
 		if(!players.contains(player))
@@ -63,9 +67,26 @@ public class Lobby implements Representable
 		player.sendMessage(P.pluginName + "You were moved to " + name);
 	}
 	
+	/**
+	 * Remove a player from this lobby
+	 * @param player The player that should leave the lobby
+	 */
 	public void leaveLobby(Player player)
 	{
 		players.remove(player);
+	}
+	
+	
+	/**
+	 * Sends a message to everybody in this lobby. The message gets prefixed by the lobby name
+	 * @param message The Message to send
+	 */
+	public void broadcast(String message)
+	{
+		for(Player p : players)
+		{
+			p.sendMessage(P.getPref(name) + " " + message);
+		}
 	}
 	
 	public boolean isInLobby(Player player)

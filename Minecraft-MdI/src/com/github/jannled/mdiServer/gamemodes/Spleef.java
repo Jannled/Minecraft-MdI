@@ -1,13 +1,13 @@
 package com.github.jannled.mdiServer.gamemodes;
 
-import com.github.jannled.mdiServer.lobby.Team;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class Spleef extends Gamemode
 {
 
-	public Spleef(Team[] teams, int maxRoundLength)
+	public Spleef(ConfigurationSection config)
 	{
-		super(teams, maxRoundLength);
+		super(config);
 	}
 
 	@Override
@@ -29,6 +29,12 @@ public class Spleef extends Gamemode
 	{
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void loadConfig(ConfigurationSection config)
+	{
+		//TODO Spleef config loader
 	}
 
 }
