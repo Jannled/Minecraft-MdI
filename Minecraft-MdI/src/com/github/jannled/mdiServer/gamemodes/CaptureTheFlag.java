@@ -22,18 +22,6 @@ public class CaptureTheFlag extends Gamemode
 	}
 
 	@Override
-	public void end()
-	{
-		
-	}
-
-	@Override
-	public void tickCounter(int time)
-	{
-		
-	}
-
-	@Override
 	public void after()
 	{
 		

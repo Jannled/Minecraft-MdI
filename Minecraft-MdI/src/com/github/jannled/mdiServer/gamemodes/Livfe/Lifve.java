@@ -1,14 +1,17 @@
 package com.github.jannled.mdiServer.gamemodes.Livfe;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.gamemodes.Gamemode;
-import com.github.jannled.mdiServer.lobby.Team;
 
 public class Lifve extends Gamemode
 {
@@ -22,7 +25,7 @@ public class Lifve extends Gamemode
 	
 	@Override
 	/**
-	 * There is no time limit for the round, so you need to stop it manually by calling this method when it should terminate!
+	 * There is no time time limit for a Lifve round, so I need to stop it manually by calling this method when it should terminate!
 	 */
 	public void end()
 	{
@@ -37,12 +40,17 @@ public class Lifve extends Gamemode
 		}
 	}
 	
+	/**
+	 * Called in game loop every second
+	 */
 	public void tick()
 	{
 		for(LifveTeam t : teams)
 		{
 			t.tick();
+			t.updateScoreboard();
 		}
+		updateScoreboard(0);
 	}
 	
 	@Override
@@ -64,7 +72,7 @@ public class Lifve extends Gamemode
 			@Override
 			public void run()
 			{
-				updateScoreboard(0);
+				tick();
 			}
 		}, 20, 20);
 	}
@@ -81,14 +89,32 @@ public class Lifve extends Gamemode
 	}
 	
 	@Override
+	protected void loadConfig(ConfigurationSection config)
+	{
+		teams = new LifveTeam[config.getConfigurationSection("teams").getKeys(false).size()];
+		super.loadConfig(config);
+	}
+	
+	@Override
+	@SuppressWarnings("deprecation")
 	protected LifveTeam loadTeam(World world, ConfigurationSection config, String confTeam, int i)
 	{
-		double x = config.getDouble("teams." + confTeam + ".xpos");
-		double y = config.getDouble("teams." + confTeam + ".xpos");
-		double z = config.getDouble("teams." + confTeam + ".xpos");
-		Location spawn = new Location(world, x, y, z);
+		List<String> playerNames = config.getStringList("teams." + confTeam + ".players");
+		ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
+		for(int j=0; j<playerNames.size(); j++)
+		{
+			OfflinePlayer p = null;
+			try
+			{
+				p = Bukkit.getOfflinePlayer(UUID.fromString(playerNames.get(j)));	
+			} catch (Exception e)
+			{
+				p = Bukkit.getOfflinePlayer(playerNames.get(j));
+			}
+			players.add(p);
+		}
 		ChatColor color = ChatColor.getByChar(config.getString("teams." + confTeam + ".color"));
-		LifveTeam team = new LifveTeam(confTeam, color, spawn, i, i, null);
+		LifveTeam team = new LifveTeam(players, confTeam, color, 1, 3, this);
 		teams[i] = team;
 		return team;
 	}
@@ -96,6 +122,6 @@ public class Lifve extends Gamemode
 	@Override
 	protected void loadSettings(ConfigurationSection config)
 	{
-		
+		//TODO Config loader for Lifve
 	}
 }

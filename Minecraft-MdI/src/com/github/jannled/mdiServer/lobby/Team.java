@@ -18,8 +18,8 @@ public class Team
 	private Location spawn;
 	private ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
 	private int teamScore;
-	private Scoreboard teamScoreboard;
-	private Objective teamStats;
+	protected Scoreboard teamScoreboard;
+	protected Objective teamStats;
 	
 	public Team(String name, ChatColor color, Location spawn)
 	{
@@ -91,5 +91,15 @@ public class Team
 	public Objective getTeamStat()
 	{
 		return teamStats;
+	}
+	
+	public void setPlayers(ArrayList<OfflinePlayer> players)
+	{
+		this.players = players;
+	}
+	
+	public void setSpawn(Location location)
+	{
+		this.spawn = location;
 	}
 }

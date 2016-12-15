@@ -26,6 +26,8 @@ import com.github.jannled.mdiServer.lobby.Team;
  */
 public abstract class Gamemode implements Countdown
 {
+	ConfigurationSection config;
+	
 	public final static int BEFORE_GAME = 1;
 	public final static int IN_GAME = 2;
 	public final static int AFTER_GAME = 3;
@@ -52,7 +54,7 @@ public abstract class Gamemode implements Countdown
 	 */
 	public Gamemode(ConfigurationSection config)
 	{
-		loadConfig(config);
+		this.config = config;
 	}
 	
 	/**
@@ -60,6 +62,9 @@ public abstract class Gamemode implements Countdown
 	 */
 	public void start()
 	{
+		if(state != -1)
+			return;
+		
 		//Initialize scoreboard for all players
 		roundStats = scoreboard.registerNewObjective("Test", "dummy");
 		roundStats.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -78,6 +83,7 @@ public abstract class Gamemode implements Countdown
 		
 		state = BEFORE_GAME;
 		before();
+		lobby.broadcast("The Round is starting!");
 		MdIServer.countdown.startCountdown(this, 10);
 	}
 	
@@ -140,7 +146,7 @@ public abstract class Gamemode implements Countdown
 	 */
 	public void countdownForPlayers(Player p, int time)
 	{
-		p.sendMessage(this.getClass().getCanonicalName() + ChatColor.GOLD + " Die Runde beginnt in " + ChatColor.DARK_AQUA + time + ChatColor.GOLD + " Sekunden!");
+		lobby.broadcast("Die Runde beginnt in " + ChatColor.DARK_AQUA + time + ChatColor.GOLD + " Sekunden!");
 	}
 	
 	/**
@@ -215,6 +221,13 @@ public abstract class Gamemode implements Countdown
 	public void setLobby(LobbyGame lobby)
 	{
 		this.lobby = lobby;
+		try{
+			loadConfig(config);
+		} catch(NullPointerException e)
+		{
+			MdIServer.getInstance().getLogger().warning("Gamemode " + this.getClass().getSimpleName() + " threw a NullPointerException!");
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -237,7 +250,12 @@ public abstract class Gamemode implements Countdown
 		//Load Teams
 		Object[] confTeams = config.getConfigurationSection("teams").getKeys(false).toArray();
 		teams = new Team[confTeams.length];
-		World world = lobby.getSpawnLocation().getWorld();
+		World world = null;
+		//TODO REMOVE this debug!
+		if(!(lobby==null))
+			world = lobby.getSpawnLocation().getWorld();
+		else
+			System.err.println("Lobby is null!!!1!");
 		for(int i=0; i<confTeams.length; i++)
 		{
 			loadTeam(world, config, (String) confTeams[i], i);

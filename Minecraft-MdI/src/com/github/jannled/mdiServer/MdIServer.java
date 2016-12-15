@@ -72,6 +72,7 @@ public class MdIServer extends JavaPlugin
 	@Override 
 	public void onDisable()
 	{
+		saveConfigFile();
 		getLogger().info("Unloading " + pluginName + "!");
 	}
 	
@@ -135,11 +136,27 @@ public class MdIServer extends JavaPlugin
 		getLogger().info("Loaded config files! ");
 	}
 	
+	/**
+	 * Save the config to disk
+	 */
+	public void saveConfigFile()
+	{
+		getLogger().info("Saving config file!");
+		this.saveConfig();
+	}
+	
 	public boolean cmdMdIServer(CommandSender sender, Command command, String name, String[] args)
 	{
 		if(args.length > 0 && args[0].equals("reload"))
 		{
+			sender.sendMessage("Loading config!");
 			loadConfig();
+			return true;
+		}
+		else if(args.length > 0 && args[0].equals("save"))
+		{
+			sender.sendMessage("Saving config!");
+			saveConfigFile();
 			return true;
 		}
 		return false;

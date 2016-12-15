@@ -27,6 +27,7 @@ public class LobbyGame extends Lobby implements Countdown
 		super(name, spawnLocation, ChatColor.GRAY + "Go to PvP-Lobby " + ChatColor.RED + name + ChatColor.GRAY + "!", Material.REDSTONE_LAMP_OFF);
 		gamemode.setLobby(this);
 		this.gamemode = gamemode;
+		invincible = false;
 	}
 	
 	/**
@@ -39,6 +40,7 @@ public class LobbyGame extends Lobby implements Countdown
 		super(name, spawnLocation, item);
 		gamemode.setLobby(this);
 		this.gamemode = gamemode;
+		invincible = false;
 	}
 	
 	/**
@@ -55,6 +57,7 @@ public class LobbyGame extends Lobby implements Countdown
 		{
 			teams.add(t);
 		}
+		invincible = false;
 	}
 	
 	/**

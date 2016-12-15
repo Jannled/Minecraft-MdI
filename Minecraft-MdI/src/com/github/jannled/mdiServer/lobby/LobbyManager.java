@@ -115,6 +115,7 @@ public class LobbyManager
 		else
 		{
 			main.getLogger().warning("Could not find specified Gamemode " + gamemodeName + "!");
+			return null;
 		}
 		return gamemode;
 	}
@@ -178,12 +179,13 @@ public class LobbyManager
 			Lobby lobby = getLobby(p);
 			if(lobby==null)
 			{
-				sender.sendMessage(ChatColor.RED + "Exception: No Lobby found for that com.github.jannled.mdiServer.player!");
+				sender.sendMessage(ChatColor.RED + "Exception: No Lobby found for " + sender.getName() +"!");
 				return false;
 			}
 			if(lobby instanceof LobbyGame)
 			{
 				LobbyGame l = (LobbyGame) lobby;
+				l.broadcast(sender.getName() + " started the round!");
 				l.start();
 				return true;
 			}
@@ -201,6 +203,7 @@ public class LobbyManager
 			if(lobby instanceof LobbyGame)
 			{
 				LobbyGame l = (LobbyGame) lobby;
+				l.broadcast(sender.getName() + " started the round!");
 				l.start();
 				return true;
 			}

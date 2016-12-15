@@ -15,6 +15,8 @@ import org.bukkit.inventory.Inventory;
 
 import com.github.jannled.mdiServer.MdIServer;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class Guimanager implements Listener
 {
 	private MdIServer main;
@@ -62,13 +64,21 @@ public class Guimanager implements Listener
 	@EventHandler
 	public void interact(InventoryClickEvent e)
 	{
-		for(Gui g : guis)
-		{
-			if(compareInventorys(e.getClickedInventory(), g.getInventory()))
+		try {
+			for(Gui g : guis)
 			{
-				g.clicked((Player) e.getWhoClicked(), e.getCurrentItem());
-				e.setCancelled(true);
+				if(compareInventorys(e.getClickedInventory(), g.getInventory()))
+				{
+					g.clicked((Player) e.getWhoClicked(), e.getCurrentItem());
+					e.setCancelled(true);
+				}
 			}
+		} catch(Exception ex) 
+		{
+			e.setCancelled(true);
+			e.getWhoClicked().sendMessage(ChatColor.RED + "An internal error occured in the GUI-Manager. Please consider reporting this to the server admins!");
+			MdIServer.getInstance().getLogger().warning("Caught exception in Gui-Manager!");
+			ex.printStackTrace();
 		}
 	}
 	

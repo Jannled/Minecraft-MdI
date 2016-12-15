@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,8 +16,9 @@ import com.github.jannled.mdiServer.ui.Representable;
 
 public class Lobby implements Representable
 {
+	protected boolean invincible = true;
 	private String name;
-	private ArrayList<Player> players = new ArrayList<Player>();
+	private ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
 	
 	Location spawn;
 	ItemStack item;
@@ -58,6 +60,8 @@ public class Lobby implements Representable
 	 */
 	public void joinLobby(Player player)
 	{
+		//TODO It is checked somewhere else if the Lobby also contains this player, think about it!
+		player.setInvulnerable(invincible);
 		if(!players.contains(player))
 		{
 			players.add(player);
@@ -72,9 +76,20 @@ public class Lobby implements Representable
 	 */
 	public void leaveLobby(Player player)
 	{
-		players.remove(player);
+		//TODO It is checked somewhere else if the Lobby also contains this player, think about it!
+		ArrayList<Integer> removes = new ArrayList<Integer>();
+		for(int i=0; i<players.size(); i++)
+		{
+			if(players.get(i).getUniqueId().equals(player.getUniqueId()))
+			{
+				removes.add(new Integer(i));
+			}
+		}
+		for(Integer i : removes)
+		{
+			players.remove(i);
+		}
 	}
-	
 	
 	/**
 	 * Sends a message to everybody in this lobby. The message gets prefixed by the lobby name
@@ -82,15 +97,25 @@ public class Lobby implements Representable
 	 */
 	public void broadcast(String message)
 	{
-		for(Player p : players)
+		for(OfflinePlayer p : players)
 		{
-			p.sendMessage(P.getPref(name) + " " + message);
+			if(p.isOnline())
+			{
+				p.getPlayer().sendMessage(P.getPref(name) + "" + message);
+			}
 		}
 	}
 	
 	public boolean isInLobby(Player player)
 	{
-		return players.contains(player);
+		for(OfflinePlayer p : players)
+		{
+			if(p.getUniqueId().equals(player.getUniqueId()))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public String getName()
@@ -100,12 +125,20 @@ public class Lobby implements Representable
 	
 	public ArrayList<Player> getPlayers()
 	{
-		return players;
+		ArrayList<Player> buffer = new ArrayList<Player>(players.size());
+		for(OfflinePlayer p : players)
+		{
+			if(p.isOnline())
+			{
+				buffer.add(p.getPlayer());
+			}
+		}
+		return buffer;
 	}
 	
 	public Player[] getPlayersAsArray()
 	{
-		return (Player[]) players.toArray();
+		return (Player[]) getPlayers().toArray();
 	}
 	
 	public Location getSpawnLocation()
