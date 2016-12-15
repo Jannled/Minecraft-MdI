@@ -57,8 +57,6 @@ public class MdIServer extends JavaPlugin
 		getServer().getPluginManager().registerEvents(worldManager, this);
 		getServer().getPluginManager().registerEvents(playerManager, this);
 		
-		saveDefaultConfig();
-		
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() 
 		{
 			@Override 
@@ -118,6 +116,7 @@ public class MdIServer extends JavaPlugin
 	{
 		Bukkit.broadcast(ChatColor.GREEN + "Loading config files! ", "mdiServer.mdiServer");
 		getLogger().info("Loading config files!");
+		saveDefaultConfig();
 		reloadConfig();
 		Set<String> lobbysConf = config.getConfigurationSection("Lobbys").getKeys(false);
 		String[] lobbys = lobbysConf.toArray(new String[lobbysConf.size()]);

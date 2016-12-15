@@ -66,3 +66,23 @@ Lobbys:
                     spawnx: 20
                     spawny: 100
                     spawnz: 20
+        
+    Live:
+        world: world
+        xpos: 33
+        ypos: 64
+        zPos: 33
+        gamemode: 
+            name: Lifve
+            roundlength: 300
+            teams:
+                red: 
+                    color: §3
+                    players:
+                        - Jannled
+                        - AgeOfBlack
+                blue: 
+                    color: §4
+                    players:
+                        - Isifninet
+                        - Kattakko

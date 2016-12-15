@@ -2,6 +2,7 @@ package com.github.jannled.mdiServer.lobby;
 
 import java.util.ArrayList;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,8 +12,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.github.jannled.mdiServer.MdIServer;
 import com.github.jannled.mdiServer.P;
 import com.github.jannled.mdiServer.ui.Representable;
-
-import org.bukkit.ChatColor;
 
 public class Lobby implements Representable
 {

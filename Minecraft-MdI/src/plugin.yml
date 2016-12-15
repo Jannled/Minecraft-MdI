@@ -13,7 +13,7 @@ commands:
         permission-message: You are not allowed to forcefully join a lobby!
         
     lobby:
-        aliases: [spawn,leave,hub]
+        aliases: [spawn,leave,hub, l]
         descripton: Return to lobby
         usage: /lobby
         default: true

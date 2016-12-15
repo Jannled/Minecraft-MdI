@@ -21,6 +21,7 @@ import com.github.jannled.mdiServer.P;
 import com.github.jannled.mdiServer.gamemodes.CaptureTheFlag;
 import com.github.jannled.mdiServer.gamemodes.Gamemode;
 import com.github.jannled.mdiServer.gamemodes.Spleef;
+import com.github.jannled.mdiServer.gamemodes.Livfe.Lifve;
 import com.github.jannled.mdiServer.ui.Gui;
 import com.github.jannled.mdiServer.ui.Guientry;
 
@@ -48,6 +49,10 @@ public class LobbyManager
 			String[] split = l.split("\\.");
 			String name = split[split.length-1];
 			World world = Bukkit.getWorld(config.getConfigurationSection("Lobbys." + name).getString("world"));
+			if(world==null)
+			{
+				System.err.println("Warning: World is null!!!!!");
+			}
 			double x = config.getConfigurationSection("Lobbys." + l).getDouble("xpos");
 			double y = config.getConfigurationSection("Lobbys." + l).getDouble("ypos");
 			double z = config.getConfigurationSection("Lobbys." + l).getDouble("zpos");
@@ -56,7 +61,7 @@ public class LobbyManager
 			if(!config.getString("Lobbys." + l + ".gamemode").equals("none"))
 			{
 				String gamemodeName = "Lobbys." + l + ".gamemode.name";
-				gamemode = loadGamemode(world, l);
+				gamemode = loadGamemode(l);
 				if(gamemode == null)
 				{
 					main.getLogger().warning("The gamemode " + gamemodeName + " was not found");
@@ -87,36 +92,25 @@ public class LobbyManager
 			main.getGuimanager().registerGui(new Gui(guiEntrys, guiSize, opener));
 	}
 	
-	public Gamemode loadGamemode(World world, String lobbyName)
+	public Gamemode loadGamemode(String lobbyName)
 	{
 		final String path = "Lobbys." + lobbyName + ".gamemode";
 		ConfigurationSection c = main.getConfig().getConfigurationSection(path);
 		String gamemodeName = c.getString(".name");
 		Gamemode gamemode = null;
-		Team[] teams = null;
 		
-		//Load teams
-		teams = new Team[c.getKeys(false).size()];
-		int pos = 0;
-		for(String s : c.getKeys(false))
-		{	
-			final String teamPath = "." + s + ".";
-			ChatColor color = ChatColor.getByChar(teamPath + "color");
-			double x = c.getDouble(teamPath + "spawnx");
-			double y = c.getDouble(teamPath + "spawny");
-			double z = c.getDouble(teamPath + "spawnz");
-			teams[pos] = new Team(s, color, new Location(world, x, y, z));
-			pos++;
-		}
 		//Create new Gamemode
 		if(gamemodeName.equals("CaptureTheFlag"))
 		{
-			//TODO Fill in params of Gamemodes
-			gamemode = new CaptureTheFlag(null);
+			gamemode = new CaptureTheFlag(c);
 		}
 		else if(gamemodeName.equals("Spleef"))
 		{
-			gamemode = new Spleef(null);
+			gamemode = new Spleef(c);
+		}
+		else if(gamemodeName.equals("Lifve"))
+		{
+			gamemode = new Lifve(c);
 		}
 		else
 		{

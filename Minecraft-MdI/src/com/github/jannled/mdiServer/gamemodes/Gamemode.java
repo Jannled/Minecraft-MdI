@@ -234,14 +234,40 @@ public abstract class Gamemode implements Countdown
 	
 	protected void loadConfig(ConfigurationSection config)
 	{
-		String[] confTeams = (String[]) config.getConfigurationSection(".teams").getKeys(false).toArray();
+		//Load Teams
+		Object[] confTeams = config.getConfigurationSection("teams").getKeys(false).toArray();
 		teams = new Team[confTeams.length];
 		World world = lobby.getSpawnLocation().getWorld();
 		for(int i=0; i<confTeams.length; i++)
 		{
-			Location spawn = new Location(world, config.getDouble(".teams." + confTeams[i] + ".xpos"), config.getDouble(".teams." + confTeams[i] + ".ypos"), config.getDouble(".teams." + confTeams[i] + ".zpos"));
-			ChatColor color = ChatColor.getByChar(config.getString(".teams." + confTeams[i] + ".color"));
-			teams[i] = new Team(confTeams[i], color, spawn);
+			loadTeam(world, config, (String) confTeams[i], i);
 		}
+		//Load Settings
+		loadSettings(config);
+	}
+	
+	/**
+	 * Method is called per team to load it from config
+	 * @param world The world where the battle will be
+	 * @param config The config to load the Teams from
+	 * @param confTeam The TeamName
+	 * @param i The position in the team array
+	 * @return The created team for convenience, it is stored in the teams array at index i anyways!
+	 */
+	protected Team loadTeam(World world, ConfigurationSection config, String confTeam, int i)
+	{
+		double x = config.getDouble("teams." + confTeam + ".xpos");
+		double y = config.getDouble("teams." + confTeam + ".xpos");
+		double z = config.getDouble("teams." + confTeam + ".xpos");
+		Location spawn = new Location(world, x, y, z);
+		ChatColor color = ChatColor.getByChar(config.getString("teams." + confTeam + ".color"));
+		Team team = new Team(confTeam, color, spawn);
+		teams[i] = team;
+		return team;
+	}
+	
+	protected void loadSettings(ConfigurationSection config)
+	{
+		maxRoundLength = config.getInt("gamemode.roundlength");
 	}
 }

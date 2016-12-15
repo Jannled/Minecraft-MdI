@@ -34,7 +34,7 @@ public class Spleef extends Gamemode
 	@Override
 	protected void loadConfig(ConfigurationSection config)
 	{
-		//TODO Spleef config loader
+		super.loadConfig(config);
 	}
 
 }

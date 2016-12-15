@@ -8,8 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import net.minecraft.server.v1_11_R1.PacketPlayOutMount;
 
@@ -19,10 +17,7 @@ public class PlayerPickup extends Abilitie
 	
 	public PlayerPickup()
 	{
-		setItem(new ItemStack(Material.TRIPWIRE_HOOK));
-		ItemMeta itm = item.getItemMeta();
-		itm.setDisplayName("Player pickup");
-		item.setItemMeta(itm);
+		super(Material.TRIPWIRE_HOOK, "Player pickup", "Right click a player to carry him!");
 	}
 	
 	@EventHandler
