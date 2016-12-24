@@ -214,6 +214,9 @@ public class LobbyManager
 	
 	public void joinLobby(Player player, Lobby lobby)
 	{
+		if(lobbys.size()<1)
+			return;
+		
 		for(Lobby l : lobbys)
 		{
 			l.leaveLobby(player);
@@ -228,17 +231,16 @@ public class LobbyManager
 	 */
 	public Lobby reconnectLobby(Player player)
 	{
+		if(lobbys.size()<1)
+			return null;
+		
 		for(Lobby l : lobbys)
 		{
-			for(int i=0; i<l.getPlayers().size(); i++)
+			if(l.isInLobby(player))
 			{
-				if(l.getPlayers().get(i).getUniqueId().equals(player.getUniqueId()))
-				{
-					player.teleport(l.getSpawnLocation());
-					player.sendMessage(P.pluginName + "You were reconnected to " + l.getName());
-					l.getPlayers().set(i, player);
-					return l;
-				}
+				player.teleport(l.getSpawnLocation());
+				player.sendMessage(P.pluginName + "You were reconnected to " + l.getName());
+				return l;
 			}
 		}
 		lobbys.get(defaultLobby).joinLobby(player);

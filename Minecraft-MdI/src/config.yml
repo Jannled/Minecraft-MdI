@@ -32,6 +32,9 @@
 
 # The first specified Lobby should not have a gamemode, because it is the first Lobby the player spawns in.
 
+AntiCheat:
+    enabled: true
+
 Lobbys:
     Spawn:
         world: world

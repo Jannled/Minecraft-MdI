@@ -53,7 +53,7 @@ public class Lobby implements Representable
 		
 		this.item = item;
 	}
-
+	
 	/**
 	 * Add a Player to this Lobby
 	 * @param player The player to add to this lobby
@@ -62,7 +62,7 @@ public class Lobby implements Representable
 	{
 		//TODO It is checked somewhere else if the Lobby also contains this player, think about it!
 		player.setInvulnerable(invincible);
-		if(!players.contains(player))
+		if(!inLobby(player))
 		{
 			players.add(player);
 		}
@@ -77,17 +77,17 @@ public class Lobby implements Representable
 	public void leaveLobby(Player player)
 	{
 		//TODO It is checked somewhere else if the Lobby also contains this player, think about it!
-		ArrayList<Integer> removes = new ArrayList<Integer>();
+		ArrayList<OfflinePlayer> removes = new ArrayList<OfflinePlayer>();
 		for(int i=0; i<players.size(); i++)
 		{
 			if(players.get(i).getUniqueId().equals(player.getUniqueId()))
 			{
-				removes.add(new Integer(i));
+				removes.add(players.get(i));
 			}
 		}
-		for(Integer i : removes)
+		for(OfflinePlayer p : removes)
 		{
-			players.remove(i);
+			players.remove(p);
 		}
 	}
 	
@@ -110,7 +110,35 @@ public class Lobby implements Representable
 	{
 		for(OfflinePlayer p : players)
 		{
-			if(p.getUniqueId().equals(player.getUniqueId()))
+			if(comparePlayer(p, player))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the Player equals one other
+	 * @param player1 Player one
+	 * @param player2 Player two
+	 * @return True of both Players have the same UUID
+	 */
+	public boolean comparePlayer(OfflinePlayer player1, OfflinePlayer player2)
+	{
+		return player1.getUniqueId().equals(player2.getUniqueId());
+	}
+	
+	/**
+	 * Checks if the player is in the lobby
+	 * @param player The player to check if he is in the lobby
+	 * @return True if a player 
+	 */
+	public boolean inLobby(OfflinePlayer player)
+	{
+		for(OfflinePlayer p : players)
+		{
+			if(comparePlayer(p, player))
 			{
 				return true;
 			}

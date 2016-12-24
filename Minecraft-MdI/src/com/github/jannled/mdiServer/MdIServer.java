@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.jannled.mdiServer.abilities.Abilitiemanager;
+import com.github.jannled.mdiServer.antiCheat.ItemBlacklist;
 import com.github.jannled.mdiServer.commands.Ping;
 import com.github.jannled.mdiServer.countdown.CountdownTick;
 import com.github.jannled.mdiServer.lobby.LobbyManager;
@@ -38,6 +39,8 @@ public class MdIServer extends JavaPlugin
 	private PlayerManager playerManager;
 	private Guimanager guiManager;
 	private Abilitiemanager abilitieManager;
+	
+	private ItemBlacklist itemBlacklist;
 	
 	public MdIServer()
 	{
@@ -119,6 +122,10 @@ public class MdIServer extends JavaPlugin
 		getLogger().info("Loading config files!");
 		saveDefaultConfig();
 		reloadConfig();
+		
+		//Reset all necessary instances
+		itemBlacklist = null;
+		
 		Set<String> lobbysConf = config.getConfigurationSection("Lobbys").getKeys(false);
 		String[] lobbys = lobbysConf.toArray(new String[lobbysConf.size()]);
 		
@@ -133,7 +140,15 @@ public class MdIServer extends JavaPlugin
 			}
 		}
 		lobbyManager.loadLobbys(lobbys);
-		getLogger().info("Loaded config files! ");
+		
+		//Load addons
+		if(config.getBoolean("AntiCheat.enabled"))
+		{
+			getLogger().info("Addon: AntiCheat enabled!");
+			itemBlacklist = new ItemBlacklist(config.getConfigurationSection("AntiCheat"));
+		}
+		
+		getLogger().info("Loaded config files!");
 	}
 	
 	/**
@@ -185,6 +200,11 @@ public class MdIServer extends JavaPlugin
 	public Abilitiemanager getAbilitieManager()
 	{
 		return abilitieManager;
+	}
+	
+	public ItemBlacklist getItemBlacklist()
+	{
+		return itemBlacklist;
 	}
 	
     public static MdIServer getInstance() 
