@@ -1,10 +1,13 @@
 package com.github.jannled.mdiServer;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,8 +22,6 @@ import com.github.jannled.mdiServer.lobby.LobbyManager;
 import com.github.jannled.mdiServer.player.PlayerManager;
 import com.github.jannled.mdiServer.ui.Guimanager;
 import com.github.jannled.mdiServer.world.WorldManager;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class MdIServer extends JavaPlugin
 {
@@ -110,6 +111,12 @@ public class MdIServer extends JavaPlugin
 		{
 			return abilitieManager.cmdAbilities(sender, command, name, args);
 		}
+		else if(command.getLabel().equalsIgnoreCase("itemblacklist"))
+		{
+			if(itemBlacklist == null)
+				sender.sendMessage(ChatColor.RED + "The addon is disabled!");
+			return itemBlacklist.cmdBanItem(sender, command, name, args);
+		}
 		return false;
 	}
 	
@@ -142,12 +149,11 @@ public class MdIServer extends JavaPlugin
 		lobbyManager.loadLobbys(lobbys);
 		
 		//Load addons
-		if(config.getBoolean("AntiCheat.enabled"))
+		//TODO if(config.getBoolean("AntiCheat.enabled"))
 		{
 			getLogger().info("Addon: AntiCheat enabled!");
 			itemBlacklist = new ItemBlacklist(config.getConfigurationSection("AntiCheat"));
 		}
-		
 		getLogger().info("Loaded config files!");
 	}
 	
@@ -156,8 +162,17 @@ public class MdIServer extends JavaPlugin
 	 */
 	public void saveConfigFile()
 	{
+		File pluginFolder = getDataFolder();
+		String configName = "config.yml";
 		getLogger().info("Saving config file!");
-		this.saveConfig();
+		try
+		{
+			config.save(new File(pluginFolder, configName));
+		} catch (IOException e)
+		{
+			getLogger().warning("Error while saving config file: " + pluginFolder.getAbsolutePath() + "/" + configName + "!");
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean cmdMdIServer(CommandSender sender, Command command, String name, String[] args)

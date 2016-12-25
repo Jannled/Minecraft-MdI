@@ -53,3 +53,10 @@ commands:
         default: false
         permission: mdiServer.abilities
         permission-message: You are not allowed to give yourself an abilitie!
+        
+    itemblacklist: 
+        description: Add the item in your hand to the item blacklist
+        usage: /itemblacklist {add/remove}
+        default: false
+        permission: mdiServer.itemblacklist
+        permission-message: You are not allowed to modify the blacklist!
