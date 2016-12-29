@@ -3,7 +3,6 @@ package com.github.jannled.mdiServer.gamemodes.Livfe;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 
 import com.github.jannled.mdiServer.lobby.Team;
 
@@ -13,7 +12,7 @@ public class LifveTeam extends Team
 	private int dayTime;
 	private Lifve lifve;
 	
-	public LifveTeam(ArrayList<OfflinePlayer> players, String name, ChatColor color, int dayCoins, int dayTime, Lifve lifve)
+	public LifveTeam(ArrayList<LifvePlayer> players, String name, ChatColor color, int dayCoins, int dayTime, Lifve lifve)
 	{
 		super(name, color, null);
 		setPlayers(players);
@@ -37,27 +36,36 @@ public class LifveTeam extends Team
 		{
 			dayTime = lifve.getStartTime();
 			lifve.getLobby().broadcast("Das Team " + ChatColor.RESET + getName() + ChatColor.GOLD + " hat seine Tageszeit aufgebraucht!");
-			for(OfflinePlayer p : getPlayers())
+			for(LifvePlayer p : getPlayers())
 			{
 				if(p.isOnline())
 				{
-					p.getPlayer().kickPlayer(ChatColor.GOLD + "Dein Team " + ChatColor.RESET + getName() + ChatColor.GOLD + " wurde gekickt, verbleibende Tagesmünzen: " + dayCoins + "!");
+					p.getPlayer().getPlayer().kickPlayer(ChatColor.GOLD + "Dein Team " + ChatColor.RESET + getName() + ChatColor.GOLD + " wurde gekickt, verbleibende Tagesmünzen: " + dayCoins + "!");
 				}
 			}
 			return 0;
 		}
 	}
 	
+	public void reset()
+	{
+		dayCoins = lifve.getDefaultDayCoins();
+		dayTime = lifve.getStartTime();
+	}
+	
 	@Override
 	public void updateScoreboard()
 	{
 		getTeamStat().setDisplayName(getName() + ": " + ChatColor.GREEN + toDigiTime(dayTime) + ChatColor.GOLD + " ©" + dayCoins);
-		for(OfflinePlayer p : getPlayers())
+		for(LifvePlayer p : getPlayers())
 		{
 			if(p.isOnline())
 			{
-				p.getPlayer().setScoreboard(teamScoreboard);
+				p.getPlayer().getPlayer().setScoreboard(teamScoreboard);
 			}
+			String prefix = p.isOnline() ? ChatColor.GREEN + "" : ChatColor.GRAY + "";
+			prefix += ChatColor.STRIKETHROUGH + "";
+			teamStats.getScore(prefix + p.getPlayer().getName()).setScore(0);
 		}
 	}
 	

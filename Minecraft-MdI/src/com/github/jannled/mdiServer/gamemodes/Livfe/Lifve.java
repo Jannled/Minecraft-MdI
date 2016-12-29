@@ -1,6 +1,8 @@
 package com.github.jannled.mdiServer.gamemodes.Livfe;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,8 +17,13 @@ import com.github.jannled.mdiServer.gamemodes.Gamemode;
 
 public class Lifve extends Gamemode
 {
-	LifveTeam[] teams;
+	int daycoins;
+	int daytime;
+	
 	int schedular;
+	Date resetTime = null;
+	LifveTeam[] teams;
+	ConfigurationSection config;
 	
 	public Lifve(ConfigurationSection config)
 	{
@@ -45,6 +52,16 @@ public class Lifve extends Gamemode
 	 */
 	public void tick()
 	{
+		if(System.currentTimeMillis() > resetTime.getTime())
+		{
+			resetTime.setTime(System.currentTimeMillis() + 604800000);
+			MdIServer.getInstance().getLogger().info("Lifve: Daycoin reset. Next reset will be on " + resetTime.toString() + "!");
+			for(LifveTeam t : teams)
+			{
+				t.reset();
+			}
+			config.set("date", resetTime.getTime());
+		}
 		for(LifveTeam t : teams)
 		{
 			t.tick();
@@ -53,6 +70,9 @@ public class Lifve extends Gamemode
 		updateScoreboard(0);
 	}
 	
+	/**
+	 * Updates the scoreboard every tick
+	 */
 	@Override
 	public void updateScoreboard(int time)
 	{
@@ -83,11 +103,6 @@ public class Lifve extends Gamemode
 		
 	}
 	
-	public int getStartTime()
-	{
-		return 300;
-	}
-	
 	@Override
 	protected void loadConfig(ConfigurationSection config)
 	{
@@ -100,18 +115,21 @@ public class Lifve extends Gamemode
 	protected LifveTeam loadTeam(World world, ConfigurationSection config, String confTeam, int i)
 	{
 		List<String> playerNames = config.getStringList("teams." + confTeam + ".players");
-		ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
+		ArrayList<LifvePlayer> players = new ArrayList<LifvePlayer>();
 		for(int j=0; j<playerNames.size(); j++)
 		{
-			OfflinePlayer p = null;
+			LifvePlayer p = null;
 			try
 			{
-				p = Bukkit.getOfflinePlayer(UUID.fromString(playerNames.get(j)));	
+				// TODO p = Bukkit.getOfflinePlayer(UUID.fromString(playerNames.get(j)));	
 			} catch (Exception e)
 			{
-				p = Bukkit.getOfflinePlayer(playerNames.get(j));
+				//TODO p = Bukkit.getOfflinePlayer(playerNames.get(j));
 			}
-			players.add(p);
+			if(p!=null)
+			{
+				players.add(p);
+			}
 		}
 		ChatColor color = ChatColor.getByChar(config.getString("teams." + confTeam + ".color"));
 		LifveTeam team = new LifveTeam(players, confTeam, color, 1, 3, this);
@@ -122,6 +140,22 @@ public class Lifve extends Gamemode
 	@Override
 	protected void loadSettings(ConfigurationSection config)
 	{
-		//TODO Config loader for Lifve
+		this.config = config;
+		
+		String timeInConf = config.getString("date");
+		daytime = config.getInt("daytime");
+		daycoins = config.getInt("daycoins");
+		
+		resetTime = Date.from(Instant.parse(timeInConf));
+	}
+	
+	public int getDefaultDayCoins()
+	{
+		return daycoins;
+	}
+	
+	public int getStartTime()
+	{
+		return daytime;			
 	}
 }

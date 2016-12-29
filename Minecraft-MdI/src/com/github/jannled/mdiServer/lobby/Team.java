@@ -11,12 +11,14 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.github.jannled.mdiServer.gamemodes.Livfe.LifvePlayer;
+
 public class Team
 {
 	private String name;
 	private ChatColor color;
 	private Location spawn;
-	private ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
+	private ArrayList<LifvePlayer> players = new ArrayList<LifvePlayer>();
 	private int teamScore;
 	protected Scoreboard teamScoreboard;
 	protected Objective teamStats;
@@ -37,13 +39,13 @@ public class Team
 	 */
 	public void updateScoreboard()
 	{
-		for(OfflinePlayer p : players)
+		for(LifvePlayer p : players)
 		{
-			((Player) p).setScoreboard(teamScoreboard);
+			((Player) p.getPlayer()).setScoreboard(teamScoreboard);
 		}
 	}
 	
-	public void addPlayer(OfflinePlayer player)
+	public void addPlayer(LifvePlayer player)
 	{
 		players.add(player);
 	}
@@ -78,7 +80,7 @@ public class Team
 		return spawn;
 	}
 	
-	public ArrayList<OfflinePlayer> getPlayers()
+	public ArrayList<LifvePlayer> getPlayers()
 	{
 		return players;
 	}
@@ -93,7 +95,7 @@ public class Team
 		return teamStats;
 	}
 	
-	public void setPlayers(ArrayList<OfflinePlayer> players)
+	public void setPlayers(ArrayList<LifvePlayer> players)
 	{
 		this.players = players;
 	}

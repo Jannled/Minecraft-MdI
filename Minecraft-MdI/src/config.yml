@@ -77,15 +77,19 @@ Lobbys:
         zPos: 33
         gamemode: 
             name: Lifve
-            roundlength: 300
+            daytime: 300
+            daycoins: 5
+            date: 0
             teams:
                 red: 
                     color: §3
+                    daycoins: 5
                     players:
-                        - Jannled
-                        - AgeOfBlack
+                        Jannled: true
+                        AgeOfBlack: true
                 blue: 
                     color: §4
+                    daycoins: 5
                     players:
-                        - Isifninet
-                        - Kattakko
+                        Isifninet: true
+                        Kattakko: true
