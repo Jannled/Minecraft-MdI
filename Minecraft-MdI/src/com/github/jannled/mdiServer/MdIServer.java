@@ -165,6 +165,8 @@ public class MdIServer extends JavaPlugin
 		File pluginFolder = getDataFolder();
 		String configName = "config.yml";
 		getLogger().info("Saving config file!");
+		//TODO Fix broken config saver
+		/*
 		try
 		{
 			config.save(new File(pluginFolder, configName));
@@ -172,7 +174,8 @@ public class MdIServer extends JavaPlugin
 		{
 			getLogger().warning("Error while saving config file: " + pluginFolder.getAbsolutePath() + "/" + configName + "!");
 			e.printStackTrace();
-		}
+		}*/
+		saveConfig();
 	}
 	
 	public boolean cmdMdIServer(CommandSender sender, Command command, String name, String[] args)

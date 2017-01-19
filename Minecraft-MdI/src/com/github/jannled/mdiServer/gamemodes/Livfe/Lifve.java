@@ -1,14 +1,12 @@
 package com.github.jannled.mdiServer.gamemodes.Livfe;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -114,24 +112,30 @@ public class Lifve extends Gamemode
 	@SuppressWarnings("deprecation")
 	protected LifveTeam loadTeam(World world, ConfigurationSection config, String confTeam, int i)
 	{
-		List<String> playerNames = config.getStringList("teams." + confTeam + ".players");
+		config = config.getConfigurationSection("teams." + confTeam + ".players");
+		Set<String> playerNames = config.getKeys(false);
 		ArrayList<LifvePlayer> players = new ArrayList<LifvePlayer>();
-		for(int j=0; j<playerNames.size(); j++)
+		for(String s : playerNames)
 		{
 			LifvePlayer p = null;
 			try
 			{
-				// TODO p = Bukkit.getOfflinePlayer(UUID.fromString(playerNames.get(j)));	
+				p = new LifvePlayer(Bukkit.getOfflinePlayer(UUID.fromString(s)), config.getBoolean(s));
 			} catch (Exception e)
 			{
-				//TODO p = Bukkit.getOfflinePlayer(playerNames.get(j));
+				p = new LifvePlayer(Bukkit.getOfflinePlayer(s), config.getBoolean(s));
 			}
 			if(p!=null)
 			{
 				players.add(p);
 			}
 		}
-		ChatColor color = ChatColor.getByChar(config.getString("teams." + confTeam + ".color"));
+		String cColor = config.getString("teams." + confTeam + ".color");
+		ChatColor color = ChatColor.RED;
+		if(cColor!=null)
+		{
+			ChatColor.getByChar(cColor);
+		}
 		LifveTeam team = new LifveTeam(players, confTeam, color, 1, 3, this);
 		teams[i] = team;
 		return team;
@@ -146,7 +150,7 @@ public class Lifve extends Gamemode
 		daytime = config.getInt("daytime");
 		daycoins = config.getInt("daycoins");
 		
-		resetTime = Date.from(Instant.parse(timeInConf));
+		resetTime = new Date(Long.parseLong(timeInConf));
 	}
 	
 	public int getDefaultDayCoins()
